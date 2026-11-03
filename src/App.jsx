@@ -348,13 +348,10 @@ export default function App() {
   if (isAdminRoute) {
     if (!isAdminLoggedIn) {
       return (
-        <>
-          <FireflyCanvas />
-          <AdminLogin
-            onLoginSuccess={handleAdminLoginSuccess}
-            onBackToHome={handleExitAdmin}
-          />
-        </>
+        <AdminLogin
+          onLoginSuccess={handleAdminLoginSuccess}
+          onBackToHome={handleExitAdmin}
+        />
       )
     }
 
