@@ -125,13 +125,13 @@ export default function MusicPlayer(props = {}) {
     }
   }, [ytId])
 
-  // Track Display Info (แสดง UI ตลอดเวลาแม้ไม่มีเพลงเล่น)
+  // Track Display Info (แสดง UI ตลอดเวลาแม้ไม่มีเพลงเล่น โดยใช้ปกและชื่อของ Triples เป็นค่าเริ่มต้น)
   const trackInfo = {
-    title: ytMeta.title || (isYoutube ? 'YOUTUBE STREAM' : (effectiveUrl ? 'AUDIO STREAM' : 'Talking body remix')),
-    artist: ytMeta.artist || (isYoutube ? 'NOW PLAYING' : (effectiveUrl ? 'PLAYING' : 'TOVE LO (REMIX)')),
+    title: ytMeta.title || (isYoutube ? 'YOUTUBE STREAM' : (effectiveUrl ? 'AUDIO STREAM' : 'TRIPLES FOR REAL')),
+    artist: ytMeta.artist || (isYoutube ? 'NOW PLAYING' : (effectiveUrl ? 'PLAYING' : 'TRIPLES OFFICIAL')),
     cover: isYoutube
       ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
-      : 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
+      : '/asset/Triples-Logo.png',
     src: effectiveUrl,
   }
 
