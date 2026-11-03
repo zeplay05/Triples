@@ -254,9 +254,13 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
   const [selectedTheme, setSelectedTheme] = useState(() => localStorage.getItem('triples_theme') || 'Triples');
   const [themeSaved, setThemeSaved] = useState(false);
 
-  // Music State (ค่าเริ่มต้นเป็นค่าว่าง ไม่มีเพลง และอัปเดตแบบเรียลไทม์ได้ตลอด)
+  // Music State (ค่าเริ่มต้น Default เพลงหลัก และเปลี่ยนเพลงใหม่ได้ตลอดแบบเรียลไทม์)
   const [musicUrl, setMusicUrl] = useState(() => {
-    return localStorage.getItem('triples_music_url') || '';
+    const saved = localStorage.getItem('triples_music_url');
+    if (saved === null || saved.trim() === '' || saved.includes('szpLnpkuKr8')) {
+      return 'https://youtu.be/3pC31F2ijrM?si=3N-pC_OMx_VzJrv2';
+    }
+    return saved;
   });
   const [musicVolume, setMusicVolume] = useState(() => Number(localStorage.getItem('triples_music_volume') || 50));
   const [musicLayout, setMusicLayout] = useState(() => localStorage.getItem('triples_music_layout') || 'COMPACT');

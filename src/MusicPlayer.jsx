@@ -15,7 +15,12 @@ export default function MusicPlayer(props = {}) {
   // 1. ตรวจสอบค่าเพลงที่ตั้งค่าจากหลังบ้าน (Admin Settings) หรือจาก Props preview
   const [adminUrl, setAdminUrl] = useState(() => {
     if (props.previewUrl !== undefined) return props.previewUrl
-    return localStorage.getItem('triples_music_url') || ''
+    const saved = localStorage.getItem('triples_music_url')
+    if (saved && saved.includes('szpLnpkuKr8')) {
+      localStorage.removeItem('triples_music_url')
+      return ''
+    }
+    return saved || ''
   })
   const [volume, setVolume] = useState(() => {
     if (props.previewVolume !== undefined) return Number(props.previewVolume) / 100
