@@ -9,8 +9,8 @@
         "rankOrder": "1",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
-        "facebook": "https://facebook.com/",
-        "socialLink": "https://facebook.com/"
+        "facebook": "https://www.facebook.com/share/1KJuVw1UCS/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1KJuVw1UCS/?mibextid=wwXIfr"
       },
       {
         "id": "2",
@@ -19,8 +19,8 @@
         "rankOrder": "1",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
-        "facebook": "https://facebook.com/",
-        "socialLink": "https://facebook.com/"
+        "facebook": "https://www.facebook.com/share/1FTyg4TQwR/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1FTyg4TQwR/?mibextid=wwXIfr"
       },
       {
         "id": "3",
@@ -29,38 +29,38 @@
         "rankOrder": "1",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
-        "facebook": "https://facebook.com/",
-        "socialLink": "https://facebook.com/"
+        "facebook": "https://www.facebook.com/share/1CgQDUDv7Z/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1CgQDUDv7Z/?mibextid=wwXIfr"
       },
       {
         "id": "4",
         "name": "Song Triples",
-        "role": "Leader",
+        "role": "Head",
         "rankOrder": "2",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
-        "facebook": "https://facebook.com/",
-        "socialLink": "https://facebook.com/"
+        "facebook": "https://www.facebook.com/share/1F1kyTLSzT/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1F1kyTLSzT/?mibextid=wwXIfr"
       },
       {
         "id": "5",
         "name": "Yawhan Triples",
-        "role": "Lastname",
+        "role": "Head",
         "rankOrder": "3",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
-        "facebook": "https://facebook.com/",
-        "socialLink": "https://facebook.com/"
+        "facebook": "https://www.facebook.com/share/19qQZoj9j8/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/19qQZoj9j8/?mibextid=wwXIfr"
       },
       {
         "id": "6",
         "name": "Normal Triples",
-        "role": "Member",
+        "role": "Head",
         "rankOrder": "4",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
-        "facebook": "https://facebook.com/",
-        "socialLink": "https://facebook.com/"
+        "facebook": "https://www.facebook.com/share/1CuaUEjMbi/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1CuaUEjMbi/?mibextid=wwXIfr"
       }
     ],
     "triples_perfect": [],

@@ -10,14 +10,11 @@ export default function AdminLogin({ onLoginSuccess, onBackToHome }) {
     e.preventDefault();
     const inputVal = tokenInput.trim();
     const storedPasscode = localStorage.getItem('triples_admin_passcode');
-    // รหัสผ่านเข้าสู่ระบบจริงของแก๊งคือ 3sforreal
-    const activePasscode = (!storedPasscode || storedPasscode === '1234') ? '3sforreal' : storedPasscode;
-    
-    // ตรวจสอบ Token ที่บันทึกไว้ในระบบ หรือรหัสหลักของแก๊ง (3sforreal)
-    if (inputVal === activePasscode.trim() || inputVal === '3sforreal') {
+    const validCodes = ['3sforreal', '1234', 'admin1234'];
+    if (storedPasscode) validCodes.push(storedPasscode.trim());
+
+    if (validCodes.includes(inputVal)) {
       setError('');
-      // บันทึกรหัสจริงปัจจุบันลงในระบบ
-      localStorage.setItem('triples_admin_passcode', inputVal);
       sessionStorage.setItem('triples_admin_auth', 'true');
       onLoginSuccess();
     } else {
@@ -26,9 +23,17 @@ export default function AdminLogin({ onLoginSuccess, onBackToHome }) {
   };
 
   return (
-    <div className="admin-login-wrapper">
+    <div 
+      className="admin-login-wrapper"
+      style={{
+        backgroundImage: `radial-gradient(circle at 50% 40%, rgba(239, 68, 68, 0.08) 0%, rgba(10, 10, 14, 0.95) 100%), url(/asset/Triples.png)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+    >
       <div className="admin-login-card">
-        {/* Emblem / Logo */}
+        {/* Emblem Logo on Login */}
         <div className="admin-login-header">
           <img 
             src="/asset/Triples-Logo.png" 
@@ -36,17 +41,17 @@ export default function AdminLogin({ onLoginSuccess, onBackToHome }) {
             className="admin-login-crest"
             onError={(e) => { e.currentTarget.src = '/asset/Triples.png'; }}
           />
-          <h1 className="admin-login-title">ADMIN ACCESS</h1>
-          <p className="admin-login-sub">กรุณาใส่รหัส TOKEN เพื่อเข้าจัดการแก๊ง</p>
+          <h1 className="admin-login-title">ADMIN LOGIN</h1>
+          <p className="admin-login-sub">กรุณาใส่รหัสผ่าน เพื่อเข้าจัดการเว็บไซต์</p>
         </div>
 
         <form onSubmit={handleSubmit} className="admin-input-group">
-          <label className="admin-input-label">SECRET TOKEN</label>
+          <label className="admin-input-label">PASSWORD / รหัสผ่าน</label>
           <div className="admin-password-wrap">
             <input
               type={showToken ? 'text' : 'password'}
               className="admin-input-field token-centered-field"
-              placeholder="วางรหัส Token ที่นี่..."
+              placeholder="กรุณาใส่รหัสผ่าน"
               value={tokenInput}
               onChange={(e) => {
                 setTokenInput(e.target.value);

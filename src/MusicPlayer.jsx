@@ -15,7 +15,7 @@ export default function MusicPlayer(props = {}) {
   // 1. ตรวจสอบค่าเพลงที่ตั้งค่าจากหลังบ้าน (Admin Settings) หรือจาก Props preview
   const [adminUrl, setAdminUrl] = useState(() => {
     if (props.previewUrl !== undefined) return props.previewUrl
-    return localStorage.getItem('triples_music_url')
+    return localStorage.getItem('triples_music_url') || ''
   })
   const [volume, setVolume] = useState(() => {
     if (props.previewVolume !== undefined) return Number(props.previewVolume) / 100
@@ -78,7 +78,7 @@ export default function MusicPlayer(props = {}) {
 
   // 2. หา URL เพลงที่แท้จริง
   let effectiveUrl = ''
-  if (adminUrl !== null && adminUrl.trim() !== '') {
+  if (adminUrl && typeof adminUrl === 'string' && adminUrl.trim() !== '') {
     effectiveUrl = adminUrl.trim()
   } else if (musicConfig?.enabled && musicConfig?.tracks?.[0]?.src) {
     effectiveUrl = musicConfig.tracks[0].src.trim()
@@ -100,7 +100,7 @@ export default function MusicPlayer(props = {}) {
   const audioRef = useRef(null)
   const ytPlayerRef = useRef(null)
   const isYtReady = useRef(false)
-  const ytContainerId = useRef(`yt-player-${Math.random().toString(36).slice(2, 8)}`)
+  const ytWrapperRef = useRef(null)
 
   // 3. ดึงชื่อเพลง & ศิลปินอัตโนมัติจาก YouTube oEmbed (ถ้าเป็น YouTube)
   useEffect(() => {
@@ -127,11 +127,11 @@ export default function MusicPlayer(props = {}) {
 
   // Track Display Info
   const trackInfo = {
-    title: ytMeta.title || (isYoutube ? 'YOUTUBE STREAM' : 'TALKING BODY'),
-    artist: ytMeta.artist || (isYoutube ? 'NOW PLAYING' : 'TOVE LO (REMIX)'),
+    title: ytMeta.title || (isYoutube ? 'YOUTUBE STREAM' : (effectiveUrl ? 'AUDIO STREAM' : '')),
+    artist: ytMeta.artist || (isYoutube ? 'NOW PLAYING' : (effectiveUrl ? 'PLAYING' : '')),
     cover: isYoutube
       ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
-      : 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
+      : '/asset/Triples.png',
     src: effectiveUrl,
   }
 
@@ -149,25 +149,63 @@ export default function MusicPlayer(props = {}) {
     }
   }, [isYoutube])
 
-  // 5. จัดการ YouTube Player Instance
+  // 5. จัดการ YouTube Player Instance (สลับเพลงใหม่ได้ทันที ห้ามบัคกลับไปเป็นเพลงเดิม)
   useEffect(() => {
-    if (!hasTrack || !isYoutube || !ytId || isPreview) return
+    if (!hasTrack || !isYoutube || !ytId || isPreview) {
+      if (ytPlayerRef.current) {
+        try {
+          if (typeof ytPlayerRef.current.destroy === 'function') {
+            ytPlayerRef.current.destroy();
+          }
+        } catch (e) {}
+        ytPlayerRef.current = null;
+        isYtReady.current = false;
+      }
+      if (ytWrapperRef.current) {
+        ytWrapperRef.current.innerHTML = '';
+      }
+      return;
+    }
 
-    let isSubscribed = true
+    // กรณีมี Player อยู่แล้ว ให้โหลดเพลงใหม่เข้าเล่นทันที (loadVideoById)
+    if (isYtReady.current && ytPlayerRef.current && typeof ytPlayerRef.current.loadVideoById === 'function') {
+      try {
+        ytPlayerRef.current.loadVideoById({
+          videoId: ytId,
+          startSeconds: 0
+        });
+        ytPlayerRef.current.setVolume(isMuted ? 0 : volume * 100);
+        if (musicConfig.autoPlay) {
+          ytPlayerRef.current.playVideo();
+          setIsPlaying(true);
+        }
+        return;
+      } catch (err) {
+        // ถ้าเกิดข้อผิดพลาด ให้ปล่อยให้โค้ดด้านล่างสร้าง Player ใหม่
+      }
+    }
+
+    let isSubscribed = true;
     const initYT = () => {
       if (!window.YT || !window.YT.Player) {
-        setTimeout(initYT, 200)
-        return
+        setTimeout(initYT, 200);
+        return;
       }
-      if (!isSubscribed) return
+      if (!isSubscribed) return;
 
       try {
         if (ytPlayerRef.current && typeof ytPlayerRef.current.destroy === 'function') {
-          ytPlayerRef.current.destroy()
+          ytPlayerRef.current.destroy();
         }
       } catch (err) {}
+      ytPlayerRef.current = null;
 
-      ytPlayerRef.current = new window.YT.Player(ytContainerId.current, {
+      if (!ytWrapperRef.current) return;
+      ytWrapperRef.current.innerHTML = '';
+      const containerDiv = document.createElement('div');
+      ytWrapperRef.current.appendChild(containerDiv);
+
+      ytPlayerRef.current = new window.YT.Player(containerDiv, {
         height: '200',
         width: '200',
         videoId: ytId,
@@ -183,69 +221,54 @@ export default function MusicPlayer(props = {}) {
         },
         events: {
           onReady: (e) => {
-            if (!isSubscribed) return
-            isYtReady.current = true
+            if (!isSubscribed) return;
+            isYtReady.current = true;
             try {
-              const iframe = document.getElementById(ytContainerId.current) || document.querySelector(`iframe[id="${ytContainerId.current}"]`)
-              if (iframe) {
-                iframe.setAttribute('allow', 'autoplay; encrypted-media')
-              }
-            } catch (err) {}
-
-            try {
-              e.target.setVolume(isMuted ? 0 : volume * 100)
+              e.target.setVolume(isMuted ? 0 : volume * 100);
               if (musicConfig.autoPlay) {
-                e.target.playVideo()
-                setIsPlaying(true)
+                e.target.playVideo();
+                setIsPlaying(true);
               }
             } catch (err) {}
 
-            // Fallback for strict browser autoplay: start muted and unmute on first user interaction
             setTimeout(() => {
-              if (!isSubscribed) return
+              if (!isSubscribed) return;
               try {
-                const state = e.target.getPlayerState()
+                const state = e.target.getPlayerState();
                 if (state !== 1 && state !== 3) {
-                  e.target.mute()
-                  e.target.playVideo()
-                  setIsPlaying(true)
+                  e.target.mute();
+                  e.target.playVideo();
+                  setIsPlaying(true);
                 }
               } catch (err) {}
-            }, 300)
+            }, 300);
           },
           onStateChange: (e) => {
-            if (!isSubscribed) return
+            if (!isSubscribed) return;
             if (e.data === window.YT.PlayerState.PLAYING) {
-              setIsPlaying(true)
+              setIsPlaying(true);
               try {
-                setDuration(e.target.getDuration() || 0)
+                setDuration(e.target.getDuration() || 0);
               } catch (e) {}
             } else if (e.data === window.YT.PlayerState.PAUSED) {
-              setIsPlaying(false)
+              setIsPlaying(false);
             } else if (e.data === window.YT.PlayerState.ENDED) {
-              // วนลูปไม่รู้จบ
               try {
-                e.target.seekTo(0)
-                e.target.playVideo()
+                e.target.seekTo(0);
+                e.target.playVideo();
               } catch (e) {}
             }
           },
         },
-      })
-    }
+      });
+    };
 
-    initYT()
+    initYT();
 
     return () => {
-      isSubscribed = false
-      isYtReady.current = false
-      try {
-        if (ytPlayerRef.current && typeof ytPlayerRef.current.destroy === 'function') {
-          ytPlayerRef.current.destroy()
-        }
-      } catch (err) {}
-    }
-  }, [hasTrack, isYoutube, ytId, isPreview])
+      isSubscribed = false;
+    };
+  }, [hasTrack, isYoutube, ytId, isPreview]);
 
   // 6. เล่นอัตโนมัติสำหรับ HTML5 Audio
   useEffect(() => {
@@ -416,7 +439,7 @@ export default function MusicPlayer(props = {}) {
       {/* Hidden YouTube Player Frame */}
       {isYoutube && !isPreview && (
         <div
-          id={ytContainerId.current}
+          ref={ytWrapperRef}
           style={{
             position: 'fixed',
             bottom: '0px',

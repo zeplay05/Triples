@@ -254,10 +254,9 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
   const [selectedTheme, setSelectedTheme] = useState(() => localStorage.getItem('triples_theme') || 'Triples');
   const [themeSaved, setThemeSaved] = useState(false);
 
-  // Music State (ไม่ฝังตายตัว สามารถเปลี่ยนและอัปเดตแบบเรียลไทม์ได้ตลอด)
+  // Music State (ค่าเริ่มต้นเป็นค่าว่าง ไม่มีเพลง และอัปเดตแบบเรียลไทม์ได้ตลอด)
   const [musicUrl, setMusicUrl] = useState(() => {
-    const saved = localStorage.getItem('triples_music_url');
-    return saved !== null && saved !== '' ? saved : 'https://www.youtube.com/watch?v=szpLnpkuKr8';
+    return localStorage.getItem('triples_music_url') || '';
   });
   const [musicVolume, setMusicVolume] = useState(() => Number(localStorage.getItem('triples_music_volume') || 50));
   const [musicLayout, setMusicLayout] = useState(() => localStorage.getItem('triples_music_layout') || 'COMPACT');
@@ -542,7 +541,8 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
 
   // Music Save
   const handleSaveMusic = () => {
-    localStorage.setItem('triples_music_url', musicUrl);
+    const cleanUrl = (musicUrl || '').trim();
+    localStorage.setItem('triples_music_url', cleanUrl);
     localStorage.setItem('triples_music_volume', String(musicVolume));
     localStorage.setItem('triples_music_layout', musicLayout);
     window.dispatchEvent(new Event('triples_music_updated'));

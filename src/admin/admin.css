@@ -1,28 +1,8 @@
 /* ==========================================================================
-   Triples Admin System - Pixel-Perfect replica of Screenshots 1 to 5
+   Triples Admin System (Theme with Logo and Background)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap');
-
-:root {
-  --admin-bg: #09090b;
-  --admin-sidebar-bg: #0d0d10;
-  --admin-card-bg: #121216;
-  --admin-card-hover: #16161c;
-  --admin-border: rgba(255, 255, 255, 0.07);
-  --admin-border-light: rgba(255, 255, 255, 0.12);
-  --admin-text-main: #f4f4f5;
-  --admin-text-sub: #71717a;
-  --admin-text-muted: #52525b;
-  --admin-primary-blue: #2563eb;
-  --admin-primary-green: #10b981;
-  --admin-primary-cyan: #06b6d4;
-  --admin-danger-red: #ef4444;
-}
-
-/* ==========================================================================
-   1. Admin Login View (Pixel-perfect replica of User's Original Dark UI)
-   ========================================================================== */
+/* 1. Admin Login View */
 .admin-login-wrapper {
   min-height: 100vh;
   min-height: 100dvh;
@@ -32,8 +12,10 @@
   justify-content: center;
   padding: 24px 20px;
   box-sizing: border-box;
-  background-color: #08080a;
-  font-family: 'Prompt', sans-serif;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Prompt', sans-serif !important;
   color: #ffffff;
   position: relative;
   z-index: 10;
@@ -42,11 +24,14 @@
 .admin-login-card {
   width: 100%;
   max-width: 440px;
-  background: #111216;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(16, 17, 22, 0.88);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
   border-radius: 24px;
   padding: 44px 36px 36px;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 40px rgba(239, 68, 68, 0.12);
   display: flex;
   flex-direction: column;
   gap: 22px;
@@ -68,22 +53,23 @@
 }
 
 .admin-login-crest {
-  width: 82px;
+  width: 84px;
   height: auto;
-  max-height: 82px;
+  max-height: 84px;
   object-fit: contain;
   margin-bottom: 14px;
-  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.08));
+  filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.12));
 }
 
 .admin-login-title {
-  font-family: 'Chakra Petch', sans-serif;
+  font-family: 'Chakra Petch', sans-serif !important;
   font-size: 19px;
   font-weight: 800;
   letter-spacing: 0.14em;
   color: #ffffff;
   margin: 0;
   text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
 }
 
 .admin-login-sub {
@@ -101,11 +87,11 @@
 }
 
 .admin-input-label {
-  font-family: 'Chakra Petch', sans-serif;
+  font-family: 'Chakra Petch', sans-serif !important;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.45);
   text-transform: uppercase;
 }
 
@@ -119,8 +105,8 @@
   height: 48px;
   padding: 0 44px;
   border-radius: 12px;
-  background: #0c0d12;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 13, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
   font-size: 13.5px;
   font-family: 'Prompt', sans-serif;
@@ -134,14 +120,14 @@
 }
 
 .admin-input-field.token-centered-field::placeholder {
-  color: rgba(255, 255, 255, 0.28);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 13px;
 }
 
 .admin-input-field:focus {
-  border-color: rgba(255, 255, 255, 0.25);
-  box-shadow: 0 0 16px rgba(255, 255, 255, 0.08);
-  background: #0f1015;
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.12);
+  background: rgba(15, 16, 22, 0.95);
 }
 
 .eye-btn {
@@ -151,7 +137,7 @@
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.4);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -187,12 +173,12 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin-top: 4px;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.18);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 .admin-submit-btn:hover {
   background: #f4f4f5;
-  box-shadow: 0 0 28px rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.35);
   transform: translateY(-1px);
 }
 
@@ -201,7 +187,7 @@
   height: 42px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.45);
   font-family: 'Prompt', sans-serif;
   font-size: 12.5px;
@@ -216,7 +202,7 @@
 .admin-back-btn:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 /* ==========================================================================

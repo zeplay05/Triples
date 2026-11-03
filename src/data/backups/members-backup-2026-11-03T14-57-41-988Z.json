@@ -1,89 +1,74 @@
 {
-  "members": [
-    {
-      "id": "1",
-      "name": "Awake Unfair",
-      "role": "Head",
-      "rankOrder": "1",
-      "imageUrl": "/asset/Triples-Logo.png",
-      "avatar": "/asset/Triples-Logo.png",
-      "facebook": "https://facebook.com/",
-      "socialLink": "https://facebook.com/"
-    },
-    {
-      "id": "2",
-      "name": "Rix Triples",
-      "role": "Head",
-      "rankOrder": "1",
-      "imageUrl": "/asset/Triples-Logo.png",
-      "avatar": "/asset/Triples-Logo.png",
-      "facebook": "https://facebook.com/",
-      "socialLink": "https://facebook.com/"
-    },
-    {
-      "id": "3",
-      "name": "Summer Triples",
-      "role": "Head",
-      "rankOrder": "1",
-      "imageUrl": "/asset/Triples-Logo.png",
-      "avatar": "/asset/Triples-Logo.png",
-      "facebook": "https://facebook.com/",
-      "socialLink": "https://facebook.com/"
-    },
-    {
-      "id": "4",
-      "name": "Song Triples",
-      "username": "Song Triples",
-      "role": "Head",
-      "rankOrder": "1",
-      "avatar": "/asset/Triples-Logo.png",
-      "imageUrl": "/asset/Triples-Logo.png",
-      "socialLink": "https://facebook.com/",
-      "facebook": "https://facebook.com/",
-      "instagram": "",
-      "tiktok": "",
-      "kick": "",
-      "youtube": "",
-      "profileEmail": ""
-    },
-    {
-      "id": "5",
-      "name": "Yawhan Triples",
-      "username": "Yawhan Triples",
-      "role": "Head",
-      "rankOrder": "1",
-      "avatar": "/asset/Triples-Logo.png",
-      "imageUrl": "/asset/Triples-Logo.png",
-      "socialLink": "https://facebook.com/",
-      "facebook": "https://facebook.com/",
-      "instagram": "",
-      "tiktok": "",
-      "kick": "",
-      "youtube": "",
-      "profileEmail": ""
-    },
-    {
-      "id": "6",
-      "name": "Normal Triples",
-      "username": "Normal Triples",
-      "role": "Head",
-      "rankOrder": "1",
-      "avatar": "/asset/Triples-Logo.png",
-      "imageUrl": "/asset/Triples-Logo.png",
-      "socialLink": "https://facebook.com/",
-      "facebook": "https://facebook.com/",
-      "instagram": "",
-      "tiktok": "",
-      "kick": "",
-      "youtube": "",
-      "profileEmail": ""
-    }
-  ],
-  "triples_perfect": [],
-  "triples_lady": [],
-  "tamstep": [],
-  "perfect": [],
-  "herewegoagain": [],
-  "babyyouok": [],
-  "rocks": []
+  "backupDate": "2026-11-03T21:44:00.000Z",
+  "data": {
+    "members": [
+      {
+        "id": "1",
+        "name": "Awake Unfair",
+        "role": "Head",
+        "rankOrder": "1",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://www.facebook.com/share/1KJuVw1UCS/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1KJuVw1UCS/?mibextid=wwXIfr"
+      },
+      {
+        "id": "2",
+        "name": "Rix Triples",
+        "role": "Head",
+        "rankOrder": "1",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://www.facebook.com/share/1FTyg4TQwR/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1FTyg4TQwR/?mibextid=wwXIfr"
+      },
+      {
+        "id": "3",
+        "name": "Summer Triples",
+        "role": "Head",
+        "rankOrder": "1",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://www.facebook.com/share/1CgQDUDv7Z/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1CgQDUDv7Z/?mibextid=wwXIfr"
+      },
+      {
+        "id": "4",
+        "name": "Song Triples",
+        "role": "Head",
+        "rankOrder": "2",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://www.facebook.com/share/1F1kyTLSzT/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1F1kyTLSzT/?mibextid=wwXIfr"
+      },
+      {
+        "id": "5",
+        "name": "Yawhan Triples",
+        "role": "Head",
+        "rankOrder": "3",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://www.facebook.com/share/19qQZoj9j8/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/19qQZoj9j8/?mibextid=wwXIfr"
+      },
+      {
+        "id": "6",
+        "name": "Normal Triples",
+        "role": "Head",
+        "rankOrder": "4",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://www.facebook.com/share/1CuaUEjMbi/?mibextid=wwXIfr",
+        "socialLink": "https://www.facebook.com/share/1CuaUEjMbi/?mibextid=wwXIfr"
+      }
+    ],
+    "triples_perfect": [],
+    "triples_lady": [],
+    "tamstep": [],
+    "perfect": [],
+    "herewegoagain": [],
+    "babyyouok": [],
+    "rocks": []
+  }
 }
