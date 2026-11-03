@@ -1,0 +1,1051 @@
+/* ==========================================================================
+   Page Layout & Background
+   ========================================================================== */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  padding: clamp(24px, 4vh, 44px) 16px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    background-attachment: scroll;
+    padding: clamp(18px, 3vh, 28px) 12px;
+  }
+}
+
+/* ==========================================================================
+   Top Title: Triples For real + 6 YEARS WE FEARED NOTHING (Font: Chakra Petch)
+   ========================================================================== */
+.top-title-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 0;
+  user-select: none;
+}
+
+.hero-title.top-title {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: clamp(30px, 5.5vw, 64px);
+  font-weight: 700;
+  letter-spacing: clamp(4px, 1vw, 8px);
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.45), 0 4px 15px rgba(0, 0, 0, 0.9);
+  margin: 0;
+  text-align: center;
+  user-select: none;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: clamp(10px, 1.2vw, 15px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: clamp(3px, 0.35em, 8px);
+  color: rgba(255, 255, 255, 0.65);
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  margin: clamp(4px, 0.8vh, 8px) 0 0 0;
+  padding-left: clamp(3px, 0.35em, 8px);
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   Main Content Wrapper (Compact & Centered)
+   ========================================================================== */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: clamp(14px, 2vh, 20px);
+  margin: auto 0;
+  padding: 10px 0;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Action Buttons (Pure Glassmorphism - Compact ขนาดกระทัดรัดตามรูป)
+   ========================================================================== */
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Prompt', sans-serif !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: #f5f5f5;
+  background: rgba(20, 20, 28, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.45);
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.action-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px 0 rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.action-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ปุ่มบนสุด: ALL TRIPLES (ขนาดกระชับไม่ยืดยาว) */
+.member-button {
+  padding: 13px 45px;
+  font-size: 17px;
+  letter-spacing: 2px;
+  min-width: 220px;
+}
+
+/* ==========================================================================
+   Mid Buttons (Triples Perfect & Triples Lady)
+   ========================================================================== */
+.mid-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.mid-buttons .member-button {
+  padding: 13px 34px;
+  font-size: 16px;
+  min-width: 220px;
+}
+
+/* ==========================================================================
+   Section Title: GROUP BY TRIPLES
+   ========================================================================== */
+.partner-title {
+  font-size: clamp(14px, 1.8vw, 19px);
+  font-weight: 600;
+  color: #d1d5db;
+  text-transform: uppercase;
+  letter-spacing: clamp(3px, 0.8vw, 5px);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
+  margin-top: 4px;
+  text-align: center;
+  user-select: none;
+  font-family: 'Prompt', sans-serif !important;
+}
+
+/* ==========================================================================
+   Bottom Buttons Row (ขนาดกระทัดรัดชิดกันสวยงาม)
+   ========================================================================== */
+.bottom-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 900px;
+  padding: 0 6px;
+  box-sizing: border-box;
+}
+
+.partner-btn {
+  padding: 11px 24px;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  min-width: 110px;
+}
+
+/* Highlight for Center button (BABYYOUOK) */
+.center-btn {
+  background: rgba(30, 30, 42, 0.45);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.center-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints (สวย เรียบร้อย ไม่ยืดยาวทุกขนาดหน้าจอ)
+   ========================================================================== */
+
+/* Tablet & Smaller Laptops */
+@media (max-width: 820px) {
+  .member-button {
+    padding: 12px 36px;
+    font-size: 16px;
+    min-width: 200px;
+  }
+  .mid-buttons {
+    gap: 12px;
+  }
+  .mid-buttons .member-button {
+    padding: 12px 28px;
+    font-size: 15px;
+    min-width: 190px;
+  }
+  .bottom-buttons {
+    gap: 10px;
+    max-width: 650px;
+  }
+  .partner-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 580px) {
+  .main-content {
+    gap: 14px;
+  }
+
+  .member-button {
+    width: 100%;
+    max-width: 290px;
+    padding: 12px 24px;
+    font-size: 15px;
+    min-width: unset;
+  }
+
+  /* Mid buttons side-by-side cleanly */
+  .mid-buttons {
+    gap: 8px;
+    max-width: 290px;
+    width: 100%;
+  }
+
+  .mid-buttons .member-button {
+    flex: 1 1 calc(50% - 5px);
+    min-width: 135px;
+    padding: 11px 8px;
+    font-size: 13px;
+    letter-spacing: 0.8px;
+  }
+
+  /* Bottom buttons grid: 2 columns with centered featured button */
+  .bottom-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-width: 290px;
+    width: 100%;
+  }
+
+  .partner-btn {
+    width: 100%;
+    min-width: unset;
+    padding: 10px 6px;
+    font-size: 13px;
+    letter-spacing: 0.8px;
+  }
+
+  .partner-btn.center-btn {
+    grid-column: span 2;
+  }
+}
+
+/* Extra Small Mobile (< 330px) */
+@media (max-width: 330px) {
+  .mid-buttons .member-button {
+    flex: 1 1 100%;
+  }
+  .bottom-buttons {
+    grid-template-columns: 1fr;
+  }
+  .partner-btn.center-btn {
+    grid-column: span 1;
+  }
+}
+
+
+/* ==========================================================================
+   VIEW 2: MEMBER LIST PAGE (หน้ารายชื่อสไตล์รูปที่ 2)
+   ========================================================================== */
+.members-page-wrapper {
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  font-family: 'Prompt', sans-serif !important;
+  color: #ffffff;
+  padding-bottom: 70px;
+}
+
+@media (max-width: 768px) {
+  .members-page-wrapper {
+    background-attachment: scroll;
+  }
+}
+
+/* Top Bar: BACK TO INTERFACE */
+.members-nav-bar {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 24px 8px 24px;
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  z-index: 50;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 12px;
+  background: rgba(10, 10, 10, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+.home-icon {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.back-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.back-btn:hover .home-icon {
+  transform: scale(1.15);
+}
+
+/* Members Content Wrapper */
+.members-content-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 10px 24px 40px 24px;
+  position: relative;
+}
+
+@media (max-width: 600px) {
+  .members-content-container {
+    padding: 6px 14px 40px 14px;
+  }
+  .members-nav-bar {
+    padding: 16px 14px 6px 14px;
+  }
+}
+
+/* Header Section */
+.members-header-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.members-main-title {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-weight: 800;
+  font-size: clamp(26px, 5.5vw, 48px);
+  letter-spacing: clamp(4px, 0.4em, 12px);
+  text-transform: uppercase;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 0 4px 15px rgba(0, 0, 0, 0.9);
+}
+
+.members-sub-title {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-weight: 600;
+  font-size: clamp(10px, 1.2vw, 13px);
+  letter-spacing: clamp(3px, 0.45em, 8px);
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 8px 0 0 0;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
+}
+
+/* Live Search Bar */
+.search-bar-wrapper {
+  max-width: 440px;
+  margin: 0 auto clamp(28px, 4vh, 44px) auto;
+  position: relative;
+}
+
+.members-search-input {
+  width: 100%;
+  padding: 13px 24px;
+  border-radius: 9999px;
+  background: rgba(10, 10, 10, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: clamp(11px, 1.2vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-align: center;
+  text-transform: uppercase;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.members-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.members-search-input:focus {
+  background: rgba(15, 15, 15, 0.85);
+  border-color: rgba(239, 68, 68, 0.7);
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.3);
+  outline: none;
+}
+
+.members-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.members-search-input:focus {
+  background: rgba(15, 15, 15, 0.85);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  outline: none;
+}
+
+/* Rank Sections */
+.rank-section-group {
+  margin-bottom: clamp(36px, 6vh, 56px);
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-title-text {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: clamp(12px, 1.5vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.section-count-badge {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.15), transparent);
+}
+
+/* Rank Sections Wrapper (จำกัดความกว้างให้พอดี 3 การ์ด และเว้น space ด้านข้างอย่างสมดุล) */
+.members-sections-wrapper {
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+/* Members Grid (กำหนดแถวแนวนอน 3 การ์ด ขนาดคงที่เท่าเดิม ไม่ยืดยาว) */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 320px));
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+@media (max-width: 1040px) {
+  .members-grid {
+    grid-template-columns: repeat(2, minmax(0, 320px));
+    gap: 14px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 680px) {
+  .members-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    justify-items: center;
+    width: 100%;
+  }
+
+  .member-card {
+    max-width: 360px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .member-card {
+    padding: 8px 10px;
+    gap: 9px;
+  }
+  .member-avatar-wrap {
+    width: 38px;
+    height: 38px;
+  }
+  .member-name {
+    font-size: 13px;
+  }
+  .member-tag {
+    font-size: 9px;
+  }
+  .social-icon-btn {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ==========================================================================
+   Member Card (ความใสแบบ Frosted Glass ขนาดกะทัดรัดเท่าเดิม)
+   ========================================================================== */
+.member-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 320px;
+  background: rgba(15, 15, 22, 0.38);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  padding: 10px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-sizing: border-box;
+  min-height: 66px;
+}
+
+.member-card:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.38);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 14px rgba(255, 255, 255, 0.08);
+}
+
+/* ทุกยศใช้สไตล์ความใส และขอบขาวนวลเดียวกัน */
+.member-card.rank-boss,
+.member-card.rank-leader,
+.member-card.rank-lastname,
+.member-card.rank-member {
+  background: rgba(15, 15, 22, 0.38) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+  filter: none !important;
+}
+
+.member-card.rank-boss:hover,
+.member-card.rank-leader:hover,
+.member-card.rank-lastname:hover,
+.member-card.rank-member:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.38) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 0 14px rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Avatar with Circle & Online Status Dot */
+.member-avatar-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.member-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: contain;
+  padding: 4px;
+  background: #0d0d12;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-sizing: border-box;
+  display: block;
+}
+
+.member-status-dot {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 9px;
+  height: 9px;
+  background-color: #22c55e;
+  border: 1.5px solid #14141c;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 1px #22c55e, 0 0 2px #ffffff;
+  z-index: 2;
+}
+
+/* Info Stack (ตรงกลาง) */
+.member-info-stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  gap: 1px;
+}
+
+.member-name-heading {
+  font-family: 'Prompt', sans-serif !important;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.member-name-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.member-head-badge-icon,
+.member-leader-badge-icon {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  flex-shrink: 0;
+  display: inline-block;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.45));
+}
+
+.member-rank-subtitle {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+/* Social Actions Row (จัดชิดขวาตามรูป) */
+.member-actions-row {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ปุ่ม Social Icon สไตล์กล่องมนตามในรูป */
+.member-action-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.member-action-pill:hover,
+.member-action-pill.pill-facebook:hover,
+.member-action-pill.pill-instagram:hover,
+.member-action-pill.pill-tiktok:hover,
+.member-action-pill.pill-kick:hover,
+.member-action-pill.pill-youtube:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+}
+
+/* ==========================================================================
+   Profile Modal Styles (จัดการโปรไฟล์สมาชิก)
+   ========================================================================== */
+.profile-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+  animation: fadeIn 0.2s ease;
+}
+
+.profile-modal-box {
+  background: rgba(18, 18, 24, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+  box-sizing: border-box;
+  animation: zoomIn 0.2s ease;
+}
+
+.profile-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.profile-modal-close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.profile-modal-close:hover {
+  color: #ffffff;
+}
+
+.profile-modal-preview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-modal-member-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.profile-modal-member-rank {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.profile-field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.profile-field-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.profile-field-input:focus {
+  border-color: rgba(234, 179, 8, 0.6);
+}
+
+.profile-field-hint {
+  display: block;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.profile-modal-msg {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.profile-modal-msg.error {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.profile-modal-msg.success {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+.profile-modal-btns {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.profile-btn {
+  padding: 8px 18px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.profile-btn.cancel {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.profile-btn.cancel:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.profile-btn.save {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+}
+
+.profile-btn.save:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* No results state */
+.no-results {
+  text-align: center;
+  padding: 40px 16px;
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+
+/* Empty State Container */
+.empty-members-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 30px auto;
+  max-width: 520px;
+  padding: clamp(30px, 5vh, 48px) 24px;
+  background: rgba(20, 20, 20, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.empty-badge {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.empty-members-title {
+  font-family: 'Prompt', sans-serif !important;
+  font-size: clamp(16px, 2vw, 19px);
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 6px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.empty-members-subtitle {
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: clamp(10px, 1.2vw, 12px);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   Site Footer: SYSTEM DESIGN BY MEWIE CONQUERS
+   ========================================================================== */
+.site-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  margin-top: auto;
+  padding: clamp(16px, 2.5vh, 28px) 16px 8px 16px;
+  font-family: 'Chakra Petch', sans-serif !important;
+  font-size: clamp(10px, 1.1vw, 13px);
+  letter-spacing: clamp(2.5px, 0.28em, 5px);
+  text-transform: uppercase;
+  user-select: none;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.footer-prefix {
+  color: rgba(255, 255, 255, 0.42);
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.footer-author {
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+}
+
+@media (max-width: 480px) {
+  .site-footer {
+    letter-spacing: 1.8px;
+    font-size: 10px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .footer-prefix {
+    margin-right: 0;
+  }
+}
+
+
+/* ==========================================================================
+   Firefly Background Canvas Effect (Slow & Soft Glowing Halos)
+   ========================================================================== */
+.firefly-bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Ensure UI elements are stacked above the canvas */
+.page-container,
+.members-page-wrapper {
+  position: relative;
+}
+
+.top-title-wrapper,
+.main-content,
+.site-footer,
+.members-nav-bar,
+.members-content-container {
+  position: relative;
+  z-index: 2;
+}

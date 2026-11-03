@@ -1,0 +1,74 @@
+{
+  "backupDate": "2026-11-03T21:44:00.000Z",
+  "data": {
+    "members": [
+      {
+        "id": "1",
+        "name": "Awake Unfair",
+        "role": "Head",
+        "rankOrder": "1",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://facebook.com/",
+        "socialLink": "https://facebook.com/"
+      },
+      {
+        "id": "2",
+        "name": "Rix Triples",
+        "role": "Head",
+        "rankOrder": "1",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://facebook.com/",
+        "socialLink": "https://facebook.com/"
+      },
+      {
+        "id": "3",
+        "name": "Summer Triples",
+        "role": "Head",
+        "rankOrder": "1",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://facebook.com/",
+        "socialLink": "https://facebook.com/"
+      },
+      {
+        "id": "4",
+        "name": "Song Triples",
+        "role": "Leader",
+        "rankOrder": "2",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://facebook.com/",
+        "socialLink": "https://facebook.com/"
+      },
+      {
+        "id": "5",
+        "name": "Yawhan Triples",
+        "role": "Lastname",
+        "rankOrder": "3",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://facebook.com/",
+        "socialLink": "https://facebook.com/"
+      },
+      {
+        "id": "6",
+        "name": "Normal Triples",
+        "role": "Member",
+        "rankOrder": "4",
+        "imageUrl": "/asset/Triples-Logo.png",
+        "avatar": "/asset/Triples-Logo.png",
+        "facebook": "https://facebook.com/",
+        "socialLink": "https://facebook.com/"
+      }
+    ],
+    "triples_perfect": [],
+    "triples_lady": [],
+    "tamstep": [],
+    "perfect": [],
+    "herewegoagain": [],
+    "babyyouok": [],
+    "rocks": []
+  }
+}
