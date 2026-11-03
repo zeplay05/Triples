@@ -2,6 +2,24 @@
    Triples Admin System (Theme with Logo and Background)
    ========================================================================== */
 
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --admin-bg: #09090b;
+  --admin-sidebar-bg: #0d0d10;
+  --admin-card-bg: #121216;
+  --admin-card-hover: #16161c;
+  --admin-border: rgba(255, 255, 255, 0.07);
+  --admin-border-light: rgba(255, 255, 255, 0.12);
+  --admin-text-main: #f4f4f5;
+  --admin-text-sub: #71717a;
+  --admin-text-muted: #52525b;
+  --admin-primary-blue: #2563eb;
+  --admin-primary-green: #10b981;
+  --admin-primary-cyan: #06b6d4;
+  --admin-danger-red: #ef4444;
+}
+
 /* 1. Admin Login View */
 .admin-login-wrapper {
   min-height: 100vh;

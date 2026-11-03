@@ -57,7 +57,7 @@ export default function MusicPlayer(props = {}) {
   // Sync เมื่อมีการบันทึกเพลงจากหลังบ้าน (real-time cross-tab & component update)
   useEffect(() => {
     const handleSync = () => {
-      const storedUrl = localStorage.getItem('triples_music_url')
+      const storedUrl = localStorage.getItem('triples_music_url') || ''
       const storedVol = localStorage.getItem('triples_music_volume')
       const storedLayout = localStorage.getItem('triples_music_layout')
       setAdminUrl(storedUrl)
@@ -104,8 +104,8 @@ export default function MusicPlayer(props = {}) {
 
   // 3. ดึงชื่อเพลง & ศิลปินอัตโนมัติจาก YouTube oEmbed (ถ้าเป็น YouTube)
   useEffect(() => {
+    setYtMeta({ title: '', artist: '' })
     if (!ytId) {
-      setYtMeta({ title: '', artist: '' })
       return
     }
     let cancelled = false
@@ -125,13 +125,13 @@ export default function MusicPlayer(props = {}) {
     }
   }, [ytId])
 
-  // Track Display Info
+  // Track Display Info (แสดง UI ตลอดเวลาแม้ไม่มีเพลงเล่น)
   const trackInfo = {
-    title: ytMeta.title || (isYoutube ? 'YOUTUBE STREAM' : (effectiveUrl ? 'AUDIO STREAM' : '')),
-    artist: ytMeta.artist || (isYoutube ? 'NOW PLAYING' : (effectiveUrl ? 'PLAYING' : '')),
+    title: ytMeta.title || (isYoutube ? 'YOUTUBE STREAM' : (effectiveUrl ? 'AUDIO STREAM' : 'Talking body remix')),
+    artist: ytMeta.artist || (isYoutube ? 'NOW PLAYING' : (effectiveUrl ? 'PLAYING' : 'TOVE LO (REMIX)')),
     cover: isYoutube
       ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
-      : '/asset/Triples.png',
+      : 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500&auto=format&fit=crop&q=80',
     src: effectiveUrl,
   }
 
@@ -164,25 +164,12 @@ export default function MusicPlayer(props = {}) {
       if (ytWrapperRef.current) {
         ytWrapperRef.current.innerHTML = '';
       }
-      return;
-    }
-
-    // กรณีมี Player อยู่แล้ว ให้โหลดเพลงใหม่เข้าเล่นทันที (loadVideoById)
-    if (isYtReady.current && ytPlayerRef.current && typeof ytPlayerRef.current.loadVideoById === 'function') {
-      try {
-        ytPlayerRef.current.loadVideoById({
-          videoId: ytId,
-          startSeconds: 0
-        });
-        ytPlayerRef.current.setVolume(isMuted ? 0 : volume * 100);
-        if (musicConfig.autoPlay) {
-          ytPlayerRef.current.playVideo();
-          setIsPlaying(true);
-        }
-        return;
-      } catch (err) {
-        // ถ้าเกิดข้อผิดพลาด ให้ปล่อยให้โค้ดด้านล่างสร้าง Player ใหม่
+      if (!hasTrack) {
+        setIsPlaying(false);
+        setCurrentTime(0);
+        setDuration(0);
       }
+      return;
     }
 
     let isSubscribed = true;
@@ -199,6 +186,7 @@ export default function MusicPlayer(props = {}) {
         }
       } catch (err) {}
       ytPlayerRef.current = null;
+      isYtReady.current = false;
 
       if (!ytWrapperRef.current) return;
       ytWrapperRef.current.innerHTML = '';
@@ -426,18 +414,14 @@ export default function MusicPlayer(props = {}) {
 
   const progressPercent = duration ? (currentTime / duration) * 100 : 0
 
-  // ถ้าไม่มีเพลงในหลังบ้านเลย ไม่แสดงกล่องหรือเล่นเพลง
-  if (!hasTrack) {
-    return null
-  }
-
+  // แสดง UI เครื่องเล่นเพลงอยู่ตลอดแม้ยังไม่มีเพลงเล่น (ซ่อนเฉพาะกรณีเลือก Layout HIDDEN บนหน้าเว็บจริง)
   return (
     <div
       id="cyber-music-widget"
       className={`${isPreview ? 'is-preview-mode' : ''} ${activeLayout === 'BOTTOM BAR' ? 'layout-bottom-bar' : ''} ${activeLayout === 'HIDDEN' && !isPreview ? 'layout-hidden-site' : ''}`}
     >
       {/* Hidden YouTube Player Frame */}
-      {isYoutube && !isPreview && (
+      {!isPreview && (
         <div
           ref={ytWrapperRef}
           style={{
@@ -454,7 +438,7 @@ export default function MusicPlayer(props = {}) {
       )}
 
       {/* HTML5 Audio (สำหรับลิงก์ direct mp3) */}
-      {!isYoutube && (
+      {!isYoutube && hasTrack && (
         <audio
           ref={audioRef}
           src={effectiveUrl}
