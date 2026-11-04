@@ -1,6 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
-// ดึงค่า URL และ Key จาก Environment Variables หรือจาก LocalStorage ที่ตั้งค่าไว้ในหน้า Admin
+// ค่าเริ่มต้นสำหรับ Supabase กลางของแก๊ง TRIPLES
+const DEFAULT_SUPABASE_URL = 'https://vsirrrlrrmzqotwbomlt.supabase.co'
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_15HU2W29SjSRr9aDpxL08A_qONqIDNn'
+
+// ดึงค่า URL และ Key จาก LocalStorage, Environment Variables หรือค่าเริ่มต้นกลาง
 const getSupabaseConfig = () => {
   const envUrl = import.meta.env?.VITE_SUPABASE_URL || ''
   const envKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || ''
@@ -14,9 +18,12 @@ const getSupabaseConfig = () => {
     }
   } catch (e) {}
 
+  const finalUrl = localUrl.trim() || envUrl.trim() || DEFAULT_SUPABASE_URL
+  const finalKey = localKey.trim() || envKey.trim() || DEFAULT_SUPABASE_KEY
+
   return {
-    url: localUrl.trim() || envUrl.trim(),
-    key: localKey.trim() || envKey.trim(),
+    url: finalUrl,
+    key: finalKey,
   }
 }
 
