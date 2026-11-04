@@ -254,21 +254,7 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
   const [sbStatus, setSbStatus] = useState(null);
   const [sbMessage, setSbMessage] = useState('');
   const [sbLoading, setSbLoading] = useState(false);
-  const [copiedSql, setCopiedSql] = useState(false);
 
-  const supabaseSql = `create table if not exists public.triples_roster (
-  group_key text primary key,
-  members jsonb not null default '[]'::jsonb,
-  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
-
-alter table public.triples_roster enable row level security;
-drop policy if exists "Allow public read" on public.triples_roster;
-create policy "Allow public read" on public.triples_roster for select using (true);
-drop policy if exists "Allow anon insert" on public.triples_roster;
-create policy "Allow anon insert" on public.triples_roster for insert with check (true);
-drop policy if exists "Allow anon update" on public.triples_roster;
-create policy "Allow anon update" on public.triples_roster for update using (true);`;
 
   const handleSaveSupabase = () => {
     localStorage.setItem('triples_supabase_url', sbUrl.trim());
@@ -1811,53 +1797,7 @@ create policy "Allow anon update" on public.triples_roster for update using (tru
                   />
                 </div>
 
-                {/* SQL Code Box with 1-click copy */}
-                <div style={{
-                  background: 'rgba(0,0,0,0.5)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: '14px',
-                  padding: '14px 16px',
-                  marginTop: '4px'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#fbbf24', letterSpacing: '0.05em' }}>
-                      คำสั่ง SQL สำหรับสร้างตาราง (นำไปรันใน Supabase &gt; SQL Editor ครั้งเดียว):
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        navigator.clipboard?.writeText(supabaseSql);
-                        setCopiedSql(true);
-                        setTimeout(() => setCopiedSql(false), 2500);
-                      }}
-                      style={{
-                        padding: '5px 12px',
-                        background: copiedSql ? 'rgba(34,197,94,0.2)' : 'rgba(251,191,36,0.15)',
-                        border: `1px solid ${copiedSql ? '#4ade80' : '#fbbf24'}`,
-                        color: copiedSql ? '#4ade80' : '#fbbf24',
-                        borderRadius: '8px',
-                        fontSize: '11px',
-                        fontWeight: '800',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {copiedSql ? '✓ คัดลอก SQL แล้ว!' : 'คัดลอก SQL'}
-                    </button>
-                  </div>
-                  <pre style={{
-                    margin: 0,
-                    fontSize: '11px',
-                    color: 'rgba(255,255,255,0.6)',
-                    background: 'rgba(0,0,0,0.3)',
-                    padding: '10px 12px',
-                    borderRadius: '8px',
-                    overflowX: 'auto',
-                    fontFamily: 'monospace',
-                    lineHeight: 1.4
-                  }}>
-                    {supabaseSql}
-                  </pre>
-                </div>
+
 
                 {/* Action Buttons */}
                 <div style={{ display: 'flex', gap: '10px', marginTop: '6px', flexWrap: 'wrap' }}>
