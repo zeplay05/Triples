@@ -64,12 +64,38 @@ const notifyListeners = () => {
 export async function fetchAllMembers() {
   try {
     if (typeof window !== 'undefined') {
+      // 1. ดึงข้อมูลล่าสุดจาก public/data/members.json (เพื่อให้อัปเดตจาก GitHub/Vercel เสมอ)
+      try {
+        const res = await fetch(`/data/members.json?t=${Date.now()}`)
+        if (res.ok) {
+          const remoteJson = await res.json()
+          const remoteData = remoteJson?.data && typeof remoteJson.data === 'object' && !Array.isArray(remoteJson.data)
+            ? remoteJson.data
+            : remoteJson
+          if (remoteData && typeof remoteData === 'object') {
+            Object.assign(baseDefault, remoteData)
+          }
+        }
+      } catch (err) {}
+
+      // 2. ดึงข้อมูลจาก LocalStorage ถ้ามี
       const saved = localStorage.getItem(STORAGE_KEY)
       if (saved) {
         const parsed = JSON.parse(saved)
         if (parsed && typeof parsed === 'object') {
           const valid = parsed?.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data) ? parsed.data : parsed
-          memoryDB = { ...baseDefault, ...valid }
+          
+          // รวมข้อมูล: ให้ความสำคัญกับรายการที่มีสมาชิกจริง ไม่ให้ array ว่าง [] จาก localStorage ไปทับข้อมูลจริง
+          const merged = { ...baseDefault }
+          Object.keys(valid).forEach((k) => {
+            if (Array.isArray(valid[k]) && valid[k].length > 0) {
+              merged[k] = valid[k]
+            } else if (!merged[k] || merged[k].length === 0) {
+              merged[k] = valid[k] || []
+            }
+          })
+
+          memoryDB = merged
           notifyListeners()
           return memoryDB
         }
@@ -77,6 +103,7 @@ export async function fetchAllMembers() {
     }
   } catch (e) {}
 
+  memoryDB = { ...baseDefault }
   notifyListeners()
   return memoryDB
 }
