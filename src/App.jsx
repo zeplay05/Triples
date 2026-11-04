@@ -195,10 +195,11 @@ export default function App() {
     const processMember = (m, groupName = '', groupKey = '') => {
       const ro = String(m.rankOrder || '')
       const roleLower = (m.role || '').toLowerCase()
-      const isHead = ro === '1' || (ro === '' && (roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss')))
-      const isLeader = !isHead && (ro === '2' || (ro === '' && roleLower.includes('leader')))
-      const isRespect = !isHead && !isLeader && (ro === '3' || (ro === '' && roleLower.includes('respect')))
-      const isLastname = !isHead && !isLeader && !isRespect && (ro === '4' || (ro === '' && roleLower.includes('lastname')))
+      // ถ้า role เป็น Head หรือ ro เป็น 1 ให้นับเป็น HEAD ทั้งหมด
+      const isHead = roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss') || ro === '1'
+      const isLeader = !isHead && (roleLower.includes('leader') || ro === '2')
+      const isRespect = !isHead && !isLeader && (roleLower.includes('respect') || ro === '3')
+      const isLastname = !isHead && !isLeader && !isRespect && (roleLower.includes('lastname') || ro === '4')
       const isMember = !isHead && !isLeader && !isRespect && !isLastname
 
       let fb = m.facebook || ''
