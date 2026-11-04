@@ -18,9 +18,16 @@ export const defaultSections = [
     members: []
   },
   {
+    rankId: "respect",
+    title: "RESPECT",
+    cardClass: "rank-respect",
+    badgeTitle: "Respect",
+    members: []
+  },
+  {
     rankId: "lastname",
     title: "LASTNAME",
-    cardClass: "rank-leader",
+    cardClass: "rank-lastname",
     badgeTitle: "Lastname",
     members: []
   },

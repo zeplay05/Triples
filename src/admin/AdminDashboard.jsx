@@ -373,7 +373,7 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
     saveRosterMembers(currentRoster.id, newEntries);
   };
 
-  // Rank helper (กำหนด: 1 = Head, 2 = Leader, 3 = Lastname, 4 = Member)
+  // Rank helper (กำหนด: 1 = Head, 2 = Leader, 3 = Respect, 4 = Lastname, 5 = Member)
   const getRankNumber = (item) => {
     if (item.rankOrder !== undefined && item.rankOrder !== '' && !isNaN(Number(item.rankOrder))) {
       return Number(item.rankOrder);
@@ -381,13 +381,14 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
     const r = (item.role || item.status || item.rank || '').toLowerCase();
     if (r.includes('head') || r.includes('founder') || r.includes('boss') || r === '1') return 1;
     if (r.includes('leader') || r === '2') return 2;
-    if (r.includes('lastname') || r === '3') return 3;
-    return 4;
+    if (r.includes('respect') || r === '3') return 3;
+    if (r.includes('lastname') || r === '4') return 4;
+    return 5;
   };
 
   const getRoleName = (item) => {
     const num = getRankNumber(item);
-    const names = { 1: 'Head', 2: 'Leader', 3: 'Lastname', 4: 'Member' };
+    const names = { 1: 'Head', 2: 'Leader', 3: 'Respect', 4: 'Lastname', 5: 'Member' };
     const r = item?.role?.trim();
     if (r && !['whitelist', 'blacklist', 'reseller', 'vip', 'member'].includes(r.toLowerCase())) {
       return r;
@@ -451,8 +452,8 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
     const yt = form.youtube.trim();
     const primarySocial = fb || ig || tt || kick || yt || form.socialLink.trim();
 
-    const rankNum = String(form.rankOrder || '4');
-    const roleMap = { '1': 'Head', '2': 'Leader', '3': 'Lastname', '4': 'Member' };
+    const rankNum = String(form.rankOrder || '5');
+    const roleMap = { '1': 'Head', '2': 'Leader', '3': 'Respect', '4': 'Lastname', '5': 'Member' };
     const roleName = form.role?.trim() || roleMap[rankNum] || 'Member';
 
     const payload = {
@@ -1975,7 +1976,7 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
                   value={form.rankOrder}
                   onChange={e => {
                     const val = e.target.value;
-                    const map = { '1': 'Head', '2': 'Leader', '3': 'Lastname', '4': 'Member' };
+                    const map = { '1': 'Head', '2': 'Leader', '3': 'Respect', '4': 'Lastname', '5': 'Member' };
                     setForm({ ...form, rankOrder: val, role: map[val] || 'Member' });
                   }}
                   style={{
@@ -1993,8 +1994,9 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
                 >
                   <option value="1" style={{ background: '#13131a', color: '#fff' }}>1 = Head</option>
                   <option value="2" style={{ background: '#13131a', color: '#fff' }}>2 = Leader</option>
-                  <option value="3" style={{ background: '#13131a', color: '#fff' }}>3 = Lastname</option>
-                  <option value="4" style={{ background: '#13131a', color: '#fff' }}>4 = Member</option>
+                  <option value="3" style={{ background: '#13131a', color: '#fff' }}>3 = Respect</option>
+                  <option value="4" style={{ background: '#13131a', color: '#fff' }}>4 = Lastname</option>
+                  <option value="5" style={{ background: '#13131a', color: '#fff' }}>5 = Member</option>
                 </select>
               </div>
 
@@ -2094,7 +2096,7 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
 
               {/* 10. ลำดับยศคำแนะนำ */}
               <div style={{ fontSize: '11px', fontWeight: '700', color: 'rgba(255,255,255,0.45)', margin: '2px 0 4px', lineHeight: 1.4 }}>
-                * ลำดับยศ: <span style={{ color: '#a855f7' }}>1 = Head</span>, <span style={{ color: '#38bdf8' }}>2 = Leader</span>, <span style={{ color: '#eab308' }}>3 = Lastname</span>, <span style={{ color: '#94a3b8' }}>4 = Member</span>
+                * ลำดับยศ: <span style={{ color: '#a855f7' }}>1 = Head</span>, <span style={{ color: '#38bdf8' }}>2 = Leader</span>, <span style={{ color: '#10b981' }}>3 = Respect</span>, <span style={{ color: '#eab308' }}>4 = Lastname</span>, <span style={{ color: '#94a3b8' }}>5 = Member</span>
               </div>
 
               {/* 11. ปุ่ม Save Member สี gradient ตามรูป 2 */}

@@ -35,7 +35,7 @@
       {
         "id": "4",
         "name": "Song Triples",
-        "role": "Head",
+        "role": "Leader",
         "rankOrder": "2",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
@@ -45,7 +45,7 @@
       {
         "id": "5",
         "name": "Yawhan Triples",
-        "role": "Head",
+        "role": "Respect",
         "rankOrder": "3",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",
@@ -55,7 +55,7 @@
       {
         "id": "6",
         "name": "Normal Triples",
-        "role": "Head",
+        "role": "Lastname",
         "rankOrder": "4",
         "imageUrl": "/asset/Triples-Logo.png",
         "avatar": "/asset/Triples-Logo.png",

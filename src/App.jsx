@@ -195,9 +195,11 @@ export default function App() {
     const processMember = (m, groupName = '', groupKey = '') => {
       const ro = String(m.rankOrder || '')
       const roleLower = (m.role || '').toLowerCase()
-      const isHead = ro === '1' || roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss')
-      const isLeader = ro === '2' || roleLower.includes('leader')
-      const isLastname = ro === '3' || roleLower.includes('lastname')
+      const isHead = ro === '1' || (ro === '' && (roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss')))
+      const isLeader = !isHead && (ro === '2' || (ro === '' && roleLower.includes('leader')))
+      const isRespect = !isHead && !isLeader && (ro === '3' || (ro === '' && roleLower.includes('respect')))
+      const isLastname = !isHead && !isLeader && !isRespect && (ro === '4' || (ro === '' && roleLower.includes('lastname')))
+      const isMember = !isHead && !isLeader && !isRespect && !isLastname
 
       let fb = m.facebook || ''
       let ig = m.instagram || ''
@@ -214,10 +216,18 @@ export default function App() {
         else fb = m.socialLink
       }
 
+      const defaultRoleName = isHead ? 'HEAD' : isLeader ? 'LEADER' : isRespect ? 'RESPECT' : isLastname ? 'LASTNAME' : 'MEMBER'
+      let finalRole = defaultRoleName
+      if (m.role && m.role.trim()) {
+        const tr = m.role.trim()
+        if (isHead) finalRole = tr.toUpperCase()
+        else if (!tr.toLowerCase().includes('head')) finalRole = tr.toUpperCase()
+      }
+
       return {
         id: m.id,
         name: m.name || m.username,
-        rank: m.role || (isHead ? 'HEAD' : isLeader ? 'LEADER' : isLastname ? 'LASTNAME' : 'MEMBER'),
+        rank: finalRole,
         avatar: m.avatar || m.imageUrl || '/asset/Triples-Logo.png',
         facebook: fb,
         instagram: ig,
@@ -225,10 +235,12 @@ export default function App() {
         kick: kick,
         youtube: yt,
         profileEmail: m.profileEmail || '',
-        cardClass: isHead ? 'rank-boss' : isLeader ? 'rank-leader' : isLastname ? 'rank-lastname' : 'rank-member',
+        cardClass: isHead ? 'rank-boss' : isLeader ? 'rank-leader' : isRespect ? 'rank-respect' : isLastname ? 'rank-lastname' : 'rank-member',
         isHead,
         isLeader,
+        isRespect,
         isLastname,
+        isMember,
         groupName,
         groupKey,
       }
@@ -237,6 +249,7 @@ export default function App() {
     if (isAll) {
       const headList = []
       const leaderList = []
+      const respectList = []
       const lastnameList = []
       const memberList = []
 
@@ -247,6 +260,7 @@ export default function App() {
             const item = processMember(m, grpName, rosterId)
             if (item.isHead) headList.push(item)
             else if (item.isLeader) leaderList.push(item)
+            else if (item.isRespect) respectList.push(item)
             else if (item.isLastname) lastnameList.push(item)
             else memberList.push(item)
           })
@@ -256,6 +270,7 @@ export default function App() {
       return [
         { rankId: 'head', title: 'HEAD', cardClass: 'rank-boss', badgeTitle: 'Head', members: headList },
         { rankId: 'leader', title: 'LEADERS', cardClass: 'rank-leader', badgeTitle: 'Leader', members: leaderList },
+        { rankId: 'respect', title: 'RESPECT', cardClass: 'rank-respect', badgeTitle: 'Respect', members: respectList },
         { rankId: 'lastname', title: 'LASTNAME', cardClass: 'rank-lastname', badgeTitle: 'Lastname', members: lastnameList },
         { rankId: 'member', title: 'MEMBER', cardClass: 'rank-member', badgeTitle: 'Member', members: memberList },
       ]
@@ -266,6 +281,7 @@ export default function App() {
     if (Array.isArray(stored) && stored.length > 0) {
       const headList = []
       const leaderList = []
+      const respectList = []
       const lastnameList = []
       const memberList = []
 
@@ -273,6 +289,7 @@ export default function App() {
         const item = processMember(m, currentGroupTitle, rosterId)
         if (item.isHead) headList.push(item)
         else if (item.isLeader) leaderList.push(item)
+        else if (item.isRespect) respectList.push(item)
         else if (item.isLastname) lastnameList.push(item)
         else memberList.push(item)
       })
@@ -291,6 +308,13 @@ export default function App() {
           cardClass: 'rank-leader',
           badgeTitle: 'Leader',
           members: leaderList,
+        },
+        {
+          rankId: 'respect',
+          title: 'RESPECT',
+          cardClass: 'rank-respect',
+          badgeTitle: 'Respect',
+          members: respectList,
         },
         {
           rankId: 'lastname',

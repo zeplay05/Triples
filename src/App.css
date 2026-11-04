@@ -585,6 +585,7 @@
 /* ทุกยศใช้สไตล์ความใส และขอบขาวนวลเดียวกัน */
 .member-card.rank-boss,
 .member-card.rank-leader,
+.member-card.rank-respect,
 .member-card.rank-lastname,
 .member-card.rank-member {
   background: rgba(12, 12, 18, 0.88) !important;
@@ -595,6 +596,7 @@
 
 .member-card.rank-boss:hover,
 .member-card.rank-leader:hover,
+.member-card.rank-respect:hover,
 .member-card.rank-lastname:hover,
 .member-card.rank-member:hover {
   background: rgba(28, 28, 40, 0.92) !important;
