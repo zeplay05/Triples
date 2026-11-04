@@ -1,7 +1,17 @@
 // ─── Pure Static Member Service (Frontend Static สำหรับ Vercel) ────────────────
 import defaultData from '../data/members.json'
 
-// Key mapping สำหรับกลุ่มสมาชิกทั้งหมด
+// รายชื่อผู้ก่อตั้ง 6 คนที่ยศต้องเป็น HEAD (Rank 1) ตลอดกาล ห้ามเปลี่ยน
+export const FIXED_HEAD_NAMES = [
+  'awake unfair',
+  'rix triples',
+  'summer triples',
+  'song triples',
+  'yawhan triples',
+  'normal triples',
+]
+
+// Key mapping สำหรับกลุ่มสมาชิกทั้งหมด (รองรับทั้งตัวพิมพ์ใหญ่และตัวพิมพ์เล็ก)
 export const ROSTER_KEYS = {
   'MAIN TRIPLES': 'members',
   'TRIPLES PERFECT': 'triples_perfect',
@@ -11,7 +21,26 @@ export const ROSTER_KEYS = {
   'HEREWEGOAGAIN': 'herewegoagain',
   'BABYYOUOK': 'babyyouok',
   'ROCKS': 'rocks',
+  'members': 'members',
+  'triples_perfect': 'triples_perfect',
+  'triples_lady': 'triples_lady',
+  'tamstep': 'tamstep',
+  'perfect': 'perfect',
+  'herewegoagain': 'herewegoagain',
+  'babyyouok': 'babyyouok',
+  'rocks': 'rocks',
 }
+
+const ALL_ROSTER_KEYS = [
+  'members',
+  'triples_perfect',
+  'triples_lady',
+  'tamstep',
+  'perfect',
+  'herewegoagain',
+  'babyyouok',
+  'rocks',
+]
 
 const STORAGE_KEY = 'triples_roster_data'
 
@@ -20,24 +49,80 @@ const baseDefault = defaultData?.data && typeof defaultData.data === 'object' &&
   ? defaultData.data
   : defaultData
 
-// In-memory cache เริ่มต้นจาก localStorage หรือ defaultData
-let memoryDB = (() => {
+// ฟังก์ชันล็อกยศ HEAD ให้ 6 ผู้ก่อตั้งถาวร
+function enforceFixedHeads(membersList) {
+  if (!Array.isArray(membersList)) return membersList
+  return membersList.map((m) => {
+    const nameLower = (m.name || m.username || '').toLowerCase().trim()
+    if (FIXED_HEAD_NAMES.includes(nameLower)) {
+      return {
+        ...m,
+        role: 'Head',
+        rankOrder: '1',
+      }
+    }
+    return m
+  })
+}
+
+// ฟังก์ชันโหลดข้อมูลสมาชิกจาก LocalStorage แบบครอบคลุมทุก Key และไม่ให้ข้อมูลสูญหาย
+function loadStoredDB() {
+  const merged = { ...baseDefault }
+
+  // 1. ล็อกยศ HEAD ใน members เริ่มต้นทันที
+  if (merged.members) {
+    merged.members = enforceFixedHeads(merged.members)
+  }
+
+  if (typeof window === 'undefined') return merged
+
+  let storedObject = {}
   try {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        if (parsed && typeof parsed === 'object') {
-          const valid = parsed?.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data) ? parsed.data : parsed
-          return { ...baseDefault, ...valid }
-        }
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      if (parsed && typeof parsed === 'object') {
+        const valid = parsed?.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data) ? parsed.data : parsed
+        storedObject = { ...valid }
       }
     }
   } catch (e) {
     console.warn('LocalStorage load notice:', e)
   }
-  return { ...baseDefault }
-})()
+
+  // 2. ดึงข้อมูลจากคีย์ย่อยเพิ่มเติม (เช่น triples_members_babyyouok) เพื่อป้องกันตกหล่น
+  ALL_ROSTER_KEYS.forEach((k) => {
+    // ถ้าใน storedObject ยังไม่มีข้อมูล หรือเป็น array ว่าง ให้หาจากคีย์ย่อย
+    if (!storedObject[k] || !Array.isArray(storedObject[k]) || storedObject[k].length === 0) {
+      try {
+        const ind = localStorage.getItem(`triples_members_${k}`) || localStorage.getItem(`triples_admin_${k}`)
+        if (ind) {
+          const parsedInd = JSON.parse(ind)
+          if (Array.isArray(parsedInd) && parsedInd.length > 0) {
+            storedObject[k] = parsedInd
+          }
+        }
+      } catch (e) {}
+    }
+  })
+
+  // 3. รวมเข้ากับ baseDefault โดยเอารายการที่มีข้อมูลจริงเป็นหลัก
+  Object.keys(storedObject).forEach((k) => {
+    if (Array.isArray(storedObject[k]) && storedObject[k].length > 0) {
+      merged[k] = storedObject[k]
+    }
+  })
+
+  // 4. บังคับยศ HEAD ของ 6 คนหลักเสมอ ไม่ว่าจะโหลดมาจากไหนก็ตาม
+  if (merged.members) {
+    merged.members = enforceFixedHeads(merged.members)
+  }
+
+  return merged
+}
+
+// In-memory cache เริ่มต้น
+let memoryDB = loadStoredDB()
 
 // Subscribers สำหรับแจ้งเตือนเมื่อมีการเปลี่ยนแปลงข้อมูล
 const listeners = new Set()
@@ -60,11 +145,11 @@ const notifyListeners = () => {
   }
 }
 
-// โหลดข้อมูลสมาชิกทั้งหมด (ทำงานแบบ Static 100% รวดเร็ว ไม่มีติดขัด)
+// โหลดข้อมูลสมาชิกทั้งหมด
 export async function fetchAllMembers() {
   try {
     if (typeof window !== 'undefined') {
-      // 1. ดึงข้อมูลล่าสุดจาก public/data/members.json (เพื่อให้อัปเดตจาก GitHub/Vercel เสมอ)
+      // ดึงข้อมูลล่าสุดจาก public/data/members.json เผื่อมีการอัปเดตไฟล์
       try {
         const res = await fetch(`/data/members.json?t=${Date.now()}`)
         if (res.ok) {
@@ -78,32 +163,14 @@ export async function fetchAllMembers() {
         }
       } catch (err) {}
 
-      // 2. ดึงข้อมูลจาก LocalStorage ถ้ามี
-      const saved = localStorage.getItem(STORAGE_KEY)
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        if (parsed && typeof parsed === 'object') {
-          const valid = parsed?.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data) ? parsed.data : parsed
-          
-          // รวมข้อมูล: ให้ความสำคัญกับรายการที่มีสมาชิกจริง ไม่ให้ array ว่าง [] จาก localStorage ไปทับข้อมูลจริง
-          const merged = { ...baseDefault }
-          Object.keys(valid).forEach((k) => {
-            if (Array.isArray(valid[k]) && valid[k].length > 0) {
-              merged[k] = valid[k]
-            } else if (!merged[k] || merged[k].length === 0) {
-              merged[k] = valid[k] || []
-            }
-          })
-
-          memoryDB = merged
-          notifyListeners()
-          return memoryDB
-        }
-      }
+      // โหลดและรวมข้อมูลทั้งหมด
+      memoryDB = loadStoredDB()
+      notifyListeners()
+      return memoryDB
     }
   } catch (e) {}
 
-  memoryDB = { ...baseDefault }
+  memoryDB = loadStoredDB()
   notifyListeners()
   return memoryDB
 }
@@ -119,14 +186,28 @@ export function getRosterMembers(rosterId) {
   return memoryDB[key] || []
 }
 
-// บันทึกฐานข้อมูลสมาชิกทั้งหมดลง LocalStorage
+// บันทึกฐานข้อมูลสมาชิกทั้งหมดลง LocalStorage (บันทึกทั้งคีย์รวม และคีย์ย่อยแต่ละกลุ่ม)
 export async function saveAllMembers(newData) {
+  // บังคับยศ 6 ผู้ก่อตั้งห้ามเปลี่ยน
+  if (newData.members) {
+    newData.members = enforceFixedHeads(newData.members)
+  }
+
   memoryDB = { ...memoryDB, ...newData }
   notifyListeners()
 
   try {
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryDB))
+
+      // บันทึกสำรองลงคีย์เฉพาะของแต่ละกลุ่มด้วย เพื่อความแน่นอน 100%
+      ALL_ROSTER_KEYS.forEach((k) => {
+        if (memoryDB[k] !== undefined) {
+          try {
+            localStorage.setItem(`triples_members_${k}`, JSON.stringify(memoryDB[k]))
+          } catch (e) {}
+        }
+      })
     }
     return true
   } catch (err) {
@@ -138,10 +219,20 @@ export async function saveAllMembers(newData) {
 // บันทึกเฉพาะกลุ่มสมาชิก (เช่น เมื่อแก้ไขในแผง Admin หรือสลับตำแหน่ง)
 export async function saveRosterMembers(rosterId, memberList) {
   const key = ROSTER_KEYS[rosterId] || rosterId || 'members'
+  const finalMemberList = key === 'members' ? enforceFixedHeads(memberList) : memberList
+
   const updated = {
     ...memoryDB,
-    [key]: memberList,
+    [key]: finalMemberList,
   }
+
+  // เซฟลงคีย์ย่อยทันที
+  try {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(`triples_members_${key}`, JSON.stringify(finalMemberList))
+    }
+  } catch (e) {}
+
   return await saveAllMembers(updated)
 }
 

@@ -6,6 +6,7 @@ import {
   saveAllMembers,
   subscribeToRosterChanges,
   fetchAllMembers,
+  FIXED_HEAD_NAMES,
 } from '../services/memberService';
 import './admin.css';
 
@@ -375,6 +376,8 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
 
   // Rank helper (กำหนด: 1 = Head, 2 = Leader, 3 = Respect, 4 = Lastname, 5 = Member)
   const getRankNumber = (item) => {
+    const nameLower = (item.name || item.username || '').toLowerCase().trim();
+    if (FIXED_HEAD_NAMES.includes(nameLower)) return 1;
     if (item.rankOrder !== undefined && item.rankOrder !== '' && !isNaN(Number(item.rankOrder))) {
       return Number(item.rankOrder);
     }
@@ -387,6 +390,8 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
   };
 
   const getRoleName = (item) => {
+    const nameLower = (item.name || item.username || '').toLowerCase().trim();
+    if (FIXED_HEAD_NAMES.includes(nameLower)) return 'Head';
     const num = getRankNumber(item);
     const names = { 1: 'Head', 2: 'Leader', 3: 'Respect', 4: 'Lastname', 5: 'Member' };
     const r = item?.role?.trim();

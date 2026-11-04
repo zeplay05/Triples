@@ -10,6 +10,7 @@ import {
   subscribeToRosterChanges,
   updateMemberAvatar,
   ROSTER_KEYS,
+  FIXED_HEAD_NAMES,
 } from './services/memberService'
 import './App.css'
 
@@ -193,10 +194,12 @@ export default function App() {
     const fullDb = getAllMembers()
 
     const processMember = (m, groupName = '', groupKey = '') => {
+      const nameLower = (m.name || m.username || '').toLowerCase().trim()
+      const isFixedHead = FIXED_HEAD_NAMES.includes(nameLower)
       const ro = String(m.rankOrder || '')
       const roleLower = (m.role || '').toLowerCase()
-      // ถ้า role เป็น Head หรือ ro เป็น 1 ให้นับเป็น HEAD ทั้งหมด
-      const isHead = roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss') || ro === '1'
+      // ถ้าเป็น 6 ผู้ก่อตั้ง หรือ role เป็น Head หรือ ro เป็น 1 ให้นับเป็น HEAD ทั้งหมด
+      const isHead = isFixedHead || roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss') || ro === '1'
       const isLeader = !isHead && (roleLower.includes('leader') || ro === '2')
       const isRespect = !isHead && !isLeader && (roleLower.includes('respect') || ro === '3')
       const isLastname = !isHead && !isLeader && !isRespect && (roleLower.includes('lastname') || ro === '4')
@@ -278,7 +281,20 @@ export default function App() {
     }
 
     const rosterId = GROUP_STORAGE_KEYS[currentGroupTitle] || 'members'
-    const stored = fullDb[rosterId]
+    let stored = fullDb[rosterId]
+    if (!stored || !Array.isArray(stored) || stored.length === 0) {
+      try {
+        if (typeof window !== 'undefined') {
+          const directStored = localStorage.getItem('triples_members_' + rosterId)
+          if (directStored) {
+            const parsed = JSON.parse(directStored)
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              stored = parsed
+            }
+          }
+        }
+      } catch (e) {}
+    }
     if (Array.isArray(stored) && stored.length > 0) {
       const headList = []
       const leaderList = []
