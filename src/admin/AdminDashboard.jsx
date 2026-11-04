@@ -248,6 +248,73 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
   const [gangSlug, setGangSlug] = useState(() => localStorage.getItem('triples_gang_slug') || 'Triples');
   const [showLandingPage, setShowLandingPage] = useState(() => localStorage.getItem('triples_show_landing') !== 'false');
 
+  // Supabase Cloud State
+  const [sbUrl, setSbUrl] = useState(() => localStorage.getItem('triples_supabase_url') || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || '');
+  const [sbKey, setSbKey] = useState(() => localStorage.getItem('triples_supabase_key') || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || '');
+  const [sbStatus, setSbStatus] = useState(null);
+  const [sbMessage, setSbMessage] = useState('');
+  const [sbLoading, setSbLoading] = useState(false);
+  const [copiedSql, setCopiedSql] = useState(false);
+
+  const supabaseSql = `create table if not exists public.triples_roster (
+  group_key text primary key,
+  members jsonb not null default '[]'::jsonb,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.triples_roster enable row level security;
+drop policy if exists "Allow public read" on public.triples_roster;
+create policy "Allow public read" on public.triples_roster for select using (true);
+drop policy if exists "Allow anon insert" on public.triples_roster;
+create policy "Allow anon insert" on public.triples_roster for insert with check (true);
+drop policy if exists "Allow anon update" on public.triples_roster;
+create policy "Allow anon update" on public.triples_roster for update using (true);`;
+
+  const handleSaveSupabase = () => {
+    localStorage.setItem('triples_supabase_url', sbUrl.trim());
+    localStorage.setItem('triples_supabase_key', sbKey.trim());
+    setSbStatus('success');
+    setSbMessage('บันทึกการตั้งค่า Supabase เรียบร้อยแล้ว!');
+    fetchAllMembers();
+    setTimeout(() => setSbMessage(''), 3500);
+  };
+
+  const handleSyncToSupabase = async () => {
+    if (!sbUrl.trim() || !sbKey.trim()) {
+      setSbStatus('error');
+      setSbMessage('กรุณากรอก Supabase Project URL และ Anon Key ให้ครบถ้วน');
+      return;
+    }
+    setSbLoading(true);
+    setSbStatus(null);
+    setSbMessage('กำลังเชื่อมต่อและซิงค์ข้อมูลขึ้น Supabase...');
+
+    localStorage.setItem('triples_supabase_url', sbUrl.trim());
+    localStorage.setItem('triples_supabase_key', sbKey.trim());
+
+    try {
+      const { createClient } = await import('@supabase/supabase-js');
+      const client = createClient(sbUrl.trim(), sbKey.trim());
+
+      const test = await client.from('triples_roster').select('group_key').limit(1);
+      if (test.error) {
+        throw new Error(test.error.message || 'ไม่สามารถเข้าถึงตาราง triples_roster ได้ (กรุณารัน SQL สร้างตารางใน Supabase ก่อน)');
+      }
+
+      const allData = getAllMembers();
+      await saveAllMembers(allData);
+
+      setSbStatus('success');
+      setSbMessage('✓ เชื่อมต่อและซิงค์รายชื่อทั้งหมดขึ้น Supabase สำเร็จเรียบร้อย! ตอนนี้ทุกคนทั่วโลกจะเห็นข้อมูลตรงกันทันที');
+    } catch (err) {
+      console.error(err);
+      setSbStatus('error');
+      setSbMessage(`การเชื่อมต่อล้มเหลว: ${err.message || 'โปรดตรวจสอบ URL, Key หรือรัน SQL สร้างตาราง'}`);
+    } finally {
+      setSbLoading(false);
+    }
+  };
+
   // Appearance State
   const [logoInput, setLogoInput] = useState(() => localStorage.getItem('triples_logo_url') || '/asset/Triples-Logo.png');
   const [bgInput, setBgInput] = useState(() => localStorage.getItem('triples_bg_url') || '/asset/Triples.png');
@@ -1640,6 +1707,222 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
                   </svg>
                   {previewSaved ? '✓ บันทึก LIVE PREVIEW สำเร็จ!' : 'บันทึก LIVE PREVIEW'}
                 </button>
+              </div>
+            </div>
+
+            {/* Supabase Cloud Database Card */}
+            <div className="admin-setting-card" style={{
+              background: 'rgba(15,15,15,0.7)',
+              backdropFilter: 'blur(20px)',
+              border: '1px solid rgba(59,130,246,0.3)',
+              borderRadius: '24px',
+              padding: '32px',
+              boxShadow: '0 10px 40px rgba(0,0,0,0.6)'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    background: 'rgba(59,130,246,0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#60a5fa'
+                  }}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                      <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                    </svg>
+                  </span>
+                  <div>
+                    <h2 style={{ fontSize: '18px', fontWeight: '800', color: '#ffffff', margin: 0 }}>
+                      Supabase Cloud Database (ระบบฐานข้อมูลคลาวด์กลาง)
+                    </h2>
+                    <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.45)', margin: '4px 0 0' }}>
+                      เชื่อมต่อ Supabase เพื่อให้เมื่อแอดมินเพิ่ม/แก้ไขรายชื่อ ทุกคนที่เข้าชมเว็บทั่วโลกจะมองเห็นข้อมูลตรงกันทันทีแบบ Real-time
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <span style={{
+                    padding: '4px 10px',
+                    borderRadius: '8px',
+                    fontSize: '11px',
+                    fontWeight: '800',
+                    background: (sbUrl && sbKey) ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)',
+                    color: (sbUrl && sbKey) ? '#4ade80' : '#f87171',
+                    border: (sbUrl && sbKey) ? '1px solid rgba(34,197,94,0.3)' : '1px solid rgba(239,68,68,0.3)'
+                  }}>
+                    {(sbUrl && sbKey) ? '● กำหนดค่าแล้ว' : '○ ยังไม่ได้เชื่อมต่อ'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Inputs Form */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '20px' }}>
+                <div>
+                  <label style={{ fontSize: '11px', fontWeight: '800', color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '6px' }}>
+                    1. SUPABASE PROJECT URL
+                  </label>
+                  <input
+                    value={sbUrl}
+                    onChange={e => setSbUrl(e.target.value)}
+                    placeholder="https://xyzabcdefghijkl.supabase.co"
+                    style={{
+                      width: '100%',
+                      background: 'rgba(0,0,0,0.4)',
+                      border: '1px solid rgba(59,130,246,0.25)',
+                      borderRadius: '12px',
+                      padding: '12px 16px',
+                      color: '#ffffff',
+                      fontSize: '13px',
+                      fontFamily: 'monospace',
+                      boxSizing: 'border-box',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ fontSize: '11px', fontWeight: '800', color: '#93c5fd', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '6px' }}>
+                    2. SUPABASE ANON PUBLIC KEY
+                  </label>
+                  <input
+                    type="password"
+                    value={sbKey}
+                    onChange={e => setSbKey(e.target.value)}
+                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    style={{
+                      width: '100%',
+                      background: 'rgba(0,0,0,0.4)',
+                      border: '1px solid rgba(59,130,246,0.25)',
+                      borderRadius: '12px',
+                      padding: '12px 16px',
+                      color: '#ffffff',
+                      fontSize: '13px',
+                      fontFamily: 'monospace',
+                      boxSizing: 'border-box',
+                      outline: 'none'
+                    }}
+                  />
+                </div>
+
+                {/* SQL Code Box with 1-click copy */}
+                <div style={{
+                  background: 'rgba(0,0,0,0.5)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: '14px',
+                  padding: '14px 16px',
+                  marginTop: '4px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: '800', color: '#fbbf24', letterSpacing: '0.05em' }}>
+                      คำสั่ง SQL สำหรับสร้างตาราง (นำไปรันใน Supabase &gt; SQL Editor ครั้งเดียว):
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard?.writeText(supabaseSql);
+                        setCopiedSql(true);
+                        setTimeout(() => setCopiedSql(false), 2500);
+                      }}
+                      style={{
+                        padding: '5px 12px',
+                        background: copiedSql ? 'rgba(34,197,94,0.2)' : 'rgba(251,191,36,0.15)',
+                        border: `1px solid ${copiedSql ? '#4ade80' : '#fbbf24'}`,
+                        color: copiedSql ? '#4ade80' : '#fbbf24',
+                        borderRadius: '8px',
+                        fontSize: '11px',
+                        fontWeight: '800',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {copiedSql ? '✓ คัดลอก SQL แล้ว!' : 'คัดลอก SQL'}
+                    </button>
+                  </div>
+                  <pre style={{
+                    margin: 0,
+                    fontSize: '11px',
+                    color: 'rgba(255,255,255,0.6)',
+                    background: 'rgba(0,0,0,0.3)',
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    overflowX: 'auto',
+                    fontFamily: 'monospace',
+                    lineHeight: 1.4
+                  }}>
+                    {supabaseSql}
+                  </pre>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: 'flex', gap: '10px', marginTop: '6px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={handleSyncToSupabase}
+                    disabled={sbLoading}
+                    style={{
+                      padding: '12px 22px',
+                      background: 'linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: '#ffffff',
+                      fontSize: '13px',
+                      fontWeight: '800',
+                      cursor: sbLoading ? 'wait' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      boxShadow: '0 4px 15px rgba(37,99,235,0.4)',
+                      transition: 'all 0.2s'
+                    }}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    {sbLoading ? 'กำลังทดสอบและซิงค์ข้อมูล...' : 'ทดสอบการเชื่อมต่อ & ซิงค์ข้อมูลทั้งหมดขึ้น Cloud'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleSaveSupabase}
+                    style={{
+                      padding: '12px 18px',
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.15)',
+                      borderRadius: '12px',
+                      color: '#ffffff',
+                      fontSize: '13px',
+                      fontWeight: '700',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    บันทึก URL & Key
+                  </button>
+                </div>
+
+                {/* Status Message */}
+                {sbMessage && (
+                  <div style={{
+                    marginTop: '8px',
+                    padding: '12px 16px',
+                    borderRadius: '12px',
+                    fontSize: '12.5px',
+                    fontWeight: '700',
+                    lineHeight: 1.4,
+                    background: sbStatus === 'error' ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)',
+                    border: sbStatus === 'error' ? '1px solid rgba(239,68,68,0.4)' : '1px solid rgba(34,197,94,0.4)',
+                    color: sbStatus === 'error' ? '#fca5a5' : '#86efac'
+                  }}>
+                    {sbMessage}
+                  </div>
+                )}
               </div>
             </div>
 

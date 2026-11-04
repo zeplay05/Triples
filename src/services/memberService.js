@@ -1,5 +1,6 @@
-// ─── Pure Static Member Service (Frontend Static สำหรับ Vercel) ────────────────
+// ─── Supabase + Static Member Service (รองรับทั้ง Cloud Realtime และ Local Fallback) ───
 import defaultData from '../data/members.json'
+import { getSupabase } from './supabaseClient'
 
 // รายชื่อผู้ก่อตั้ง 6 คนที่ยศต้องเป็น HEAD (Rank 1) ตลอดกาล ห้ามเปลี่ยน
 export const FIXED_HEAD_NAMES = [
@@ -31,7 +32,7 @@ export const ROSTER_KEYS = {
   'rocks': 'rocks',
 }
 
-const ALL_ROSTER_KEYS = [
+export const ALL_ROSTER_KEYS = [
   'members',
   'triples_perfect',
   'triples_lady',
@@ -44,13 +45,13 @@ const ALL_ROSTER_KEYS = [
 
 const STORAGE_KEY = 'triples_roster_data'
 
-// ดึงข้อมูลตั้งต้นจาก members.json (รองรับทั้งรูปแบบห่อหุ้ม { data: ... } หรือ object ตรง)
+// ดึงข้อมูลตั้งต้นจาก members.json
 const baseDefault = defaultData?.data && typeof defaultData.data === 'object' && !Array.isArray(defaultData.data)
   ? defaultData.data
   : defaultData
 
 // ฟังก์ชันล็อกยศ HEAD ให้ 6 ผู้ก่อตั้งถาวร
-function enforceFixedHeads(membersList) {
+export function enforceFixedHeads(membersList) {
   if (!Array.isArray(membersList)) return membersList
   return membersList.map((m) => {
     const nameLower = (m.name || m.username || '').toLowerCase().trim()
@@ -65,11 +66,10 @@ function enforceFixedHeads(membersList) {
   })
 }
 
-// ฟังก์ชันโหลดข้อมูลสมาชิกจาก LocalStorage แบบครอบคลุมทุก Key และไม่ให้ข้อมูลสูญหาย
+// ฟังก์ชันโหลดข้อมูลสมาชิกจาก LocalStorage / Default
 function loadStoredDB() {
   const merged = { ...baseDefault }
 
-  // 1. ล็อกยศ HEAD ใน members เริ่มต้นทันที
   if (merged.members) {
     merged.members = enforceFixedHeads(merged.members)
   }
@@ -90,9 +90,7 @@ function loadStoredDB() {
     console.warn('LocalStorage load notice:', e)
   }
 
-  // 2. ดึงข้อมูลจากคีย์ย่อยเพิ่มเติม (เช่น triples_members_babyyouok) เพื่อป้องกันตกหล่น
   ALL_ROSTER_KEYS.forEach((k) => {
-    // ถ้าใน storedObject ยังไม่มีข้อมูล หรือเป็น array ว่าง ให้หาจากคีย์ย่อย
     if (!storedObject[k] || !Array.isArray(storedObject[k]) || storedObject[k].length === 0) {
       try {
         const ind = localStorage.getItem(`triples_members_${k}`) || localStorage.getItem(`triples_admin_${k}`)
@@ -106,14 +104,12 @@ function loadStoredDB() {
     }
   })
 
-  // 3. รวมเข้ากับ baseDefault โดยเอารายการที่มีข้อมูลจริงเป็นหลัก
   Object.keys(storedObject).forEach((k) => {
     if (Array.isArray(storedObject[k]) && storedObject[k].length > 0) {
       merged[k] = storedObject[k]
     }
   })
 
-  // 4. บังคับยศ HEAD ของ 6 คนหลักเสมอ ไม่ว่าจะโหลดมาจากไหนก็ตาม
   if (merged.members) {
     merged.members = enforceFixedHeads(merged.members)
   }
@@ -145,11 +141,78 @@ const notifyListeners = () => {
   }
 }
 
-// โหลดข้อมูลสมาชิกทั้งหมด
+// ช่องทาง Realtime Subscription สำหรับ Supabase
+let realtimeChannel = null
+
+function setupSupabaseRealtime(supabase) {
+  if (realtimeChannel || !supabase) return
+  try {
+    realtimeChannel = supabase
+      .channel('public:triples_roster')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'triples_roster' },
+        (payload) => {
+          if (payload.new && payload.new.group_key) {
+            const key = payload.new.group_key
+            let members = Array.isArray(payload.new.members) ? payload.new.members : []
+            if (key === 'members') members = enforceFixedHeads(members)
+
+            memoryDB = {
+              ...memoryDB,
+              [key]: members,
+            }
+            notifyListeners()
+          }
+        }
+      )
+      .subscribe()
+  } catch (e) {
+    console.warn('Supabase Realtime subscription error:', e)
+  }
+}
+
+// โหลดข้อมูลสมาชิกทั้งหมด (ดึงจาก Supabase ก่อนเสมอ หากเชื่อมต่อไว้)
 export async function fetchAllMembers() {
+  const supabase = getSupabase()
+
+  if (supabase) {
+    try {
+      setupSupabaseRealtime(supabase)
+
+      const { data, error } = await supabase
+        .from('triples_roster')
+        .select('group_key, members')
+
+      if (!error && Array.isArray(data) && data.length > 0) {
+        const cloudData = { ...memoryDB }
+        data.forEach((row) => {
+          if (row.group_key && Array.isArray(row.members)) {
+            cloudData[row.group_key] = row.group_key === 'members'
+              ? enforceFixedHeads(row.members)
+              : row.members
+          }
+        })
+        memoryDB = cloudData
+        notifyListeners()
+
+        // บันทึกลง LocalStorage ไว้เป็นแคชสำรอง
+        try {
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryDB))
+          }
+        } catch (e) {}
+
+        return memoryDB
+      }
+    } catch (e) {
+      console.warn('Supabase fetch failed, falling back to local:', e)
+    }
+  }
+
+  // Fallback: ดึงข้อมูลล่าสุดจาก public/data/members.json และ LocalStorage
   try {
     if (typeof window !== 'undefined') {
-      // ดึงข้อมูลล่าสุดจาก public/data/members.json เผื่อมีการอัปเดตไฟล์
       try {
         const res = await fetch(`/data/members.json?t=${Date.now()}`)
         if (res.ok) {
@@ -163,7 +226,6 @@ export async function fetchAllMembers() {
         }
       } catch (err) {}
 
-      // โหลดและรวมข้อมูลทั้งหมด
       memoryDB = loadStoredDB()
       notifyListeners()
       return memoryDB
@@ -186,9 +248,8 @@ export function getRosterMembers(rosterId) {
   return memoryDB[key] || []
 }
 
-// บันทึกฐานข้อมูลสมาชิกทั้งหมดลง LocalStorage (บันทึกทั้งคีย์รวม และคีย์ย่อยแต่ละกลุ่ม)
+// บันทึกฐานข้อมูลสมาชิกทั้งหมดลง LocalStorage และ Supabase
 export async function saveAllMembers(newData) {
-  // บังคับยศ 6 ผู้ก่อตั้งห้ามเปลี่ยน
   if (newData.members) {
     newData.members = enforceFixedHeads(newData.members)
   }
@@ -196,11 +257,10 @@ export async function saveAllMembers(newData) {
   memoryDB = { ...memoryDB, ...newData }
   notifyListeners()
 
+  // 1. บันทึกลง LocalStorage ในเครื่อง
   try {
     if (typeof window !== 'undefined') {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(memoryDB))
-
-      // บันทึกสำรองลงคีย์เฉพาะของแต่ละกลุ่มด้วย เพื่อความแน่นอน 100%
       ALL_ROSTER_KEYS.forEach((k) => {
         if (memoryDB[k] !== undefined) {
           try {
@@ -209,11 +269,26 @@ export async function saveAllMembers(newData) {
         }
       })
     }
-    return true
   } catch (err) {
-    console.error('Failed to save members to LocalStorage:', err)
-    return false
+    console.error('LocalStorage save error:', err)
   }
+
+  // 2. บันทึกขึ้น Supabase Cloud Database หากตั้งค่าไว้
+  const supabase = getSupabase()
+  if (supabase) {
+    try {
+      const rows = ALL_ROSTER_KEYS.map((k) => ({
+        group_key: k,
+        members: memoryDB[k] || [],
+        updated_at: new Date().toISOString(),
+      }))
+      await supabase.from('triples_roster').upsert(rows, { onConflict: 'group_key' })
+    } catch (e) {
+      console.error('Supabase saveAllMembers error:', e)
+    }
+  }
+
+  return true
 }
 
 // บันทึกเฉพาะกลุ่มสมาชิก (เช่น เมื่อแก้ไขในแผง Admin หรือสลับตำแหน่ง)
@@ -226,12 +301,25 @@ export async function saveRosterMembers(rosterId, memberList) {
     [key]: finalMemberList,
   }
 
-  // เซฟลงคีย์ย่อยทันที
   try {
     if (typeof window !== 'undefined') {
       localStorage.setItem(`triples_members_${key}`, JSON.stringify(finalMemberList))
     }
   } catch (e) {}
+
+  // ส่งขึ้น Supabase Cloud ทันที
+  const supabase = getSupabase()
+  if (supabase) {
+    try {
+      await supabase.from('triples_roster').upsert({
+        group_key: key,
+        members: finalMemberList,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'group_key' })
+    } catch (e) {
+      console.error('Supabase saveRosterMembers error:', e)
+    }
+  }
 
   return await saveAllMembers(updated)
 }
@@ -272,5 +360,8 @@ export async function updateMemberAvatar(memberIdOrName, newAvatarUrl, groupName
 
 // เริ่มต้นแจ้งเตือนทันทีเมื่อโมดูลโหลด
 if (typeof window !== 'undefined') {
-  setTimeout(() => notifyListeners(), 0)
+  setTimeout(() => {
+    notifyListeners()
+    fetchAllMembers().catch(() => {})
+  }, 0)
 }
