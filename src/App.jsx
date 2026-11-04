@@ -432,7 +432,9 @@ export default function App() {
 
           {/* Footer ด้านล่างสุดตรงกลาง */}
           <footer className="site-footer">
-            <span className="footer-prefix">SYSTEM DESIGN BY</span>{' '}
+            <span className="footer-prefix">DESIGN BY</span>{' '}
+            <span className="footer-author">DEVV KODOMO</span>{' '}
+            <span className="footer-prefix">POWERED BY</span>{' '}
             <span className="footer-author">MEWIE CONQUERS</span>
           </footer>
         </div>
@@ -650,7 +652,9 @@ export default function App() {
 
             {/* Footer ด้านล่างสุดตรงกลาง */}
             <footer className="site-footer">
-              <span className="footer-prefix">SYSTEM DESIGN BY</span>{' '}
+              <span className="footer-prefix">DESIGN BY</span>{' '}
+              <span className="footer-author">DEVV KODOMO</span>{' '}
+              <span className="footer-prefix">POWERED BY</span>{' '}
               <span className="footer-author">MEWIE CONQUERS</span>
             </footer>
           </div>
