@@ -78,7 +78,7 @@ export const SUB_ROSTERS = [
   { id: 'triples_perfect', label: 'Triples Perfect', title: 'TRIPLES PERFECT', groupName: 'TRIPLES PERFECT', storageKey: 'triples_members_triples_perfect' },
   { id: 'triples_lady', label: 'Triples Lady', title: 'TRIPLES LADY', groupName: 'TRIPLES LADY', storageKey: 'triples_members_triples_lady' },
   { id: 'tamstep', label: 'Tamstep', title: 'TAMSTEP', groupName: 'TAMSTEP', storageKey: 'triples_members_tamstep' },
-  { id: 'perfect', label: 'Perfect', title: 'PERFECT', groupName: 'PERFECT', storageKey: 'triples_members_perfect' },
+  { id: 'aespa', label: 'Aespa', title: 'AESPA', groupName: 'AESPA', storageKey: 'triples_members_aespa' },
   { id: 'herewegoagain', label: 'Herewegoagain', title: 'HEREWEGOAGAIN', groupName: 'HEREWEGOAGAIN', storageKey: 'triples_members_herewegoagain' },
   { id: 'babyyouok', label: 'Babyyouok', title: 'BABYYOUOK', groupName: 'BABYYOUOK', storageKey: 'triples_members_babyyouok' },
   { id: 'rocks', label: 'Rocks', title: 'ROCKS', groupName: 'ROCKS', storageKey: 'triples_members_rocks' },
