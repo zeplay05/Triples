@@ -46,7 +46,6 @@ export const membersByGroup = {
   'TRIPLES LADY': JSON.parse(JSON.stringify(defaultSections)),
   'TAMSTEP': JSON.parse(JSON.stringify(defaultSections)),
   'PERFECT': JSON.parse(JSON.stringify(defaultSections)),
-  'AESPA': JSON.parse(JSON.stringify(defaultSections)),
   'HEREWEGOAGAIN': JSON.parse(JSON.stringify(defaultSections)),
   'BABYYOUOK': JSON.parse(JSON.stringify(defaultSections)),
   'ROCKS': JSON.parse(JSON.stringify(defaultSections)),

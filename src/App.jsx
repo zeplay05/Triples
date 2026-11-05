@@ -19,7 +19,7 @@ const GROUP_STORAGE_KEYS = {
   'TRIPLES PERFECT': 'triples_perfect',
   'TRIPLES LADY': 'triples_lady',
   'TAMSTEP': 'tamstep',
-  'AESPA': 'aespa',
+  'PERFECT': 'perfect',
   'HEREWEGOAGAIN': 'herewegoagain',
   'BABYYOUOK': 'babyyouok',
   'ROCKS': 'rocks',
@@ -82,7 +82,7 @@ export default function App() {
 
   const bottomButtons = [
     { name: 'TAMSTEP' },
-    { name: 'AESPA' },
+    { name: 'PERFECT' },
     { name: 'HEREWEGOAGAIN', isCenter: true },
     { name: 'BABYYOUOK' },
     { name: 'ROCKS' },
