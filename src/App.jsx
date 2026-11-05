@@ -19,7 +19,7 @@ const GROUP_STORAGE_KEYS = {
   'TRIPLES PERFECT': 'triples_perfect',
   'TRIPLES LADY': 'triples_lady',
   'TAMSTEP': 'tamstep',
-  'PERFECT': 'perfect',
+  'AESPA': 'aespa',
   'HEREWEGOAGAIN': 'herewegoagain',
   'BABYYOUOK': 'babyyouok',
   'ROCKS': 'rocks',
@@ -82,7 +82,7 @@ export default function App() {
 
   const bottomButtons = [
     { name: 'TAMSTEP' },
-    { name: 'PERFECT' },
+    { name: 'AESPA' },
     { name: 'HEREWEGOAGAIN', isCenter: true },
     { name: 'BABYYOUOK' },
     { name: 'ROCKS' },
@@ -475,7 +475,7 @@ export default function App() {
           <footer className="site-footer">
             <span className="footer-group">
               <span className="footer-prefix">DESIGN BY</span>
-              <span className="footer-author">DEVV KODOMO</span>
+              <span className="footer-author">TRYZ AESPA</span>
             </span>
             <span className="footer-group">
               <span className="footer-prefix">POWERED BY</span>
