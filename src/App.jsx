@@ -10,7 +10,6 @@ import {
   subscribeToRosterChanges,
   updateMemberAvatar,
   ROSTER_KEYS,
-  FIXED_HEAD_NAMES,
 } from './services/memberService'
 import './App.css'
 
@@ -18,11 +17,9 @@ const GROUP_STORAGE_KEYS = {
   'MAIN TRIPLES': 'members',
   'TRIPLES PERFECT': 'triples_perfect',
   'TRIPLES LADY': 'triples_lady',
-  'TAMSTEP': 'tamstep',
   'PERFECT': 'perfect',
   'HEREWEGOAGAIN': 'herewegoagain',
   'BABYYOUOK': 'babyyouok',
-  'ROCKS': 'rocks',
 }
 
 export default function App() {
@@ -81,11 +78,9 @@ export default function App() {
   const bgImage = '/asset/Triples.png'
 
   const bottomButtons = [
-    { name: 'TAMSTEP' },
     { name: 'PERFECT' },
     { name: 'HEREWEGOAGAIN', isCenter: true },
     { name: 'BABYYOUOK' },
-    { name: 'ROCKS' },
   ]
 
   const handleOpenMembers = (title) => {
@@ -194,12 +189,10 @@ export default function App() {
     const fullDb = getAllMembers()
 
     const processMember = (m, groupName = '', groupKey = '') => {
-      const nameLower = (m.name || m.username || '').toLowerCase().trim()
-      const isFixedHead = FIXED_HEAD_NAMES.includes(nameLower)
       const ro = String(m.rankOrder || '')
       const roleLower = (m.role || '').toLowerCase()
-      // ถ้าเป็น 6 ผู้ก่อตั้ง หรือ role เป็น Head หรือ ro เป็น 1 ให้นับเป็น HEAD ทั้งหมด
-      const isHead = isFixedHead || roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss') || ro === '1'
+      // ถ้า role เป็น Head หรือ ro เป็น 1 ให้นับเป็น HEAD ทั้งหมด
+      const isHead = roleLower.includes('head') || roleLower.includes('founder') || roleLower.includes('boss') || ro === '1'
       const isLeader = !isHead && (roleLower.includes('leader') || ro === '2')
       const isRespect = !isHead && !isLeader && (roleLower.includes('respect') || ro === '3')
       const isLastname = !isHead && !isLeader && !isRespect && (roleLower.includes('lastname') || ro === '4')

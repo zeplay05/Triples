@@ -2,45 +2,32 @@
 import defaultData from '../data/members.json'
 import { getSupabase } from './supabaseClient'
 
-// รายชื่อผู้ก่อตั้ง 6 คนที่ยศต้องเป็น HEAD (Rank 1) ตลอดกาล ห้ามเปลี่ยน
-export const FIXED_HEAD_NAMES = [
-  'awake unfair',
-  'rix triples',
-  'summer triples',
-  'song triples',
-  'yawhan triples',
-  'normal triples',
-]
+// ปลดล็อกการ Fix ยศเรียบร้อยแล้ว
+export const FIXED_HEAD_NAMES = []
 
 // Key mapping สำหรับกลุ่มสมาชิกทั้งหมด (รองรับทั้งตัวพิมพ์ใหญ่และตัวพิมพ์เล็ก)
 export const ROSTER_KEYS = {
   'MAIN TRIPLES': 'members',
   'TRIPLES PERFECT': 'triples_perfect',
   'TRIPLES LADY': 'triples_lady',
-  'TAMSTEP': 'tamstep',
   'PERFECT': 'perfect',
   'HEREWEGOAGAIN': 'herewegoagain',
   'BABYYOUOK': 'babyyouok',
-  'ROCKS': 'rocks',
   'members': 'members',
   'triples_perfect': 'triples_perfect',
   'triples_lady': 'triples_lady',
-  'tamstep': 'tamstep',
   'perfect': 'perfect',
   'herewegoagain': 'herewegoagain',
   'babyyouok': 'babyyouok',
-  'rocks': 'rocks',
 }
 
 export const ALL_ROSTER_KEYS = [
   'members',
   'triples_perfect',
   'triples_lady',
-  'tamstep',
   'perfect',
   'herewegoagain',
   'babyyouok',
-  'rocks',
 ]
 
 const STORAGE_KEY = 'triples_roster_data'
@@ -50,29 +37,9 @@ const baseDefault = defaultData?.data && typeof defaultData.data === 'object' &&
   ? defaultData.data
   : defaultData
 
-// ฟังก์ชันล็อกยศ HEAD ให้ 6 ผู้ก่อตั้งถาวร
-export function enforceFixedHeads(membersList) {
-  if (!Array.isArray(membersList)) return membersList
-  return membersList.map((m) => {
-    const nameLower = (m.name || m.username || '').toLowerCase().trim()
-    if (FIXED_HEAD_NAMES.includes(nameLower)) {
-      return {
-        ...m,
-        role: 'Head',
-        rankOrder: '1',
-      }
-    }
-    return m
-  })
-}
-
 // ฟังก์ชันโหลดข้อมูลสมาชิกจาก LocalStorage / Default
 function loadStoredDB() {
   const merged = { ...baseDefault }
-
-  if (merged.members) {
-    merged.members = enforceFixedHeads(merged.members)
-  }
 
   if (typeof window === 'undefined') return merged
 
@@ -109,10 +76,6 @@ function loadStoredDB() {
       merged[k] = storedObject[k]
     }
   })
-
-  if (merged.members) {
-    merged.members = enforceFixedHeads(merged.members)
-  }
 
   return merged
 }
@@ -156,7 +119,6 @@ function setupSupabaseRealtime(supabase) {
           if (payload.new && payload.new.group_key) {
             const key = payload.new.group_key
             let members = Array.isArray(payload.new.members) ? payload.new.members : []
-            if (key === 'members') members = enforceFixedHeads(members)
 
             memoryDB = {
               ...memoryDB,
@@ -188,9 +150,7 @@ export async function fetchAllMembers() {
         const cloudData = { ...memoryDB }
         data.forEach((row) => {
           if (row.group_key && Array.isArray(row.members)) {
-            cloudData[row.group_key] = row.group_key === 'members'
-              ? enforceFixedHeads(row.members)
-              : row.members
+            cloudData[row.group_key] = row.members
           }
         })
         memoryDB = cloudData
@@ -250,10 +210,6 @@ export function getRosterMembers(rosterId) {
 
 // บันทึกฐานข้อมูลสมาชิกทั้งหมดลง LocalStorage และ Supabase
 export async function saveAllMembers(newData) {
-  if (newData.members) {
-    newData.members = enforceFixedHeads(newData.members)
-  }
-
   memoryDB = { ...memoryDB, ...newData }
   notifyListeners()
 
@@ -294,7 +250,7 @@ export async function saveAllMembers(newData) {
 // บันทึกเฉพาะกลุ่มสมาชิก (เช่น เมื่อแก้ไขในแผง Admin หรือสลับตำแหน่ง)
 export async function saveRosterMembers(rosterId, memberList) {
   const key = ROSTER_KEYS[rosterId] || rosterId || 'members'
-  const finalMemberList = key === 'members' ? enforceFixedHeads(memberList) : memberList
+  const finalMemberList = memberList
 
   const updated = {
     ...memoryDB,

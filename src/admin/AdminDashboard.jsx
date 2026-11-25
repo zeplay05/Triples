@@ -6,7 +6,6 @@ import {
   saveAllMembers,
   subscribeToRosterChanges,
   fetchAllMembers,
-  FIXED_HEAD_NAMES,
 } from '../services/memberService';
 import './admin.css';
 
@@ -73,15 +72,13 @@ const PARTNER_LAYOUTS = [
   'SKEWED PANELS'
 ];
 
-// ─── Member Roster Groups (เมนูหลัก + 7 เมนูสมาชิกแยกต่อลงมา) ──────────────────
+// ─── Member Roster Groups (เมนูหลัก + เมนูสมาชิกแยกต่อลงมา) ──────────────────
 export const SUB_ROSTERS = [
   { id: 'triples_perfect', label: 'Triples Perfect', title: 'TRIPLES PERFECT', groupName: 'TRIPLES PERFECT', storageKey: 'triples_members_triples_perfect' },
   { id: 'triples_lady', label: 'Triples Lady', title: 'TRIPLES LADY', groupName: 'TRIPLES LADY', storageKey: 'triples_members_triples_lady' },
-  { id: 'tamstep', label: 'Tamstep', title: 'TAMSTEP', groupName: 'TAMSTEP', storageKey: 'triples_members_tamstep' },
   { id: 'perfect', label: 'Perfect', title: 'PERFECT', groupName: 'PERFECT', storageKey: 'triples_members_perfect' },
   { id: 'herewegoagain', label: 'Herewegoagain', title: 'HEREWEGOAGAIN', groupName: 'HEREWEGOAGAIN', storageKey: 'triples_members_herewegoagain' },
   { id: 'babyyouok', label: 'Babyyouok', title: 'BABYYOUOK', groupName: 'BABYYOUOK', storageKey: 'triples_members_babyyouok' },
-  { id: 'rocks', label: 'Rocks', title: 'ROCKS', groupName: 'ROCKS', storageKey: 'triples_members_rocks' },
 ];
 
 export const MAIN_ROSTER = {
@@ -429,8 +426,6 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
 
   // Rank helper (กำหนด: 1 = Head, 2 = Leader, 3 = Respect, 4 = Lastname, 5 = Member)
   const getRankNumber = (item) => {
-    const nameLower = (item.name || item.username || '').toLowerCase().trim();
-    if (FIXED_HEAD_NAMES.includes(nameLower)) return 1;
     if (item.rankOrder !== undefined && item.rankOrder !== '' && !isNaN(Number(item.rankOrder))) {
       return Number(item.rankOrder);
     }
@@ -443,8 +438,6 @@ export default function AdminDashboard({ onLogout, onGoToLiveSite }) {
   };
 
   const getRoleName = (item) => {
-    const nameLower = (item.name || item.username || '').toLowerCase().trim();
-    if (FIXED_HEAD_NAMES.includes(nameLower)) return 'Head';
     const num = getRankNumber(item);
     const names = { 1: 'Head', 2: 'Leader', 3: 'Respect', 4: 'Lastname', 5: 'Member' };
     const r = item?.role?.trim();
